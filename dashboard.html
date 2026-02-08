@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vantage Bridge – Dashboard</title>
+
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+
+  <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #020617, #0b1a3a);
+      color: #fff;
+      padding: 18px;
+    }
+    .top {
+      display:flex;
+      justify-content: space-between;
+      align-items:center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .brand { font-weight: 800; letter-spacing: .2px; }
+    .btn {
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.25);
+      background: rgba(255,255,255,0.08);
+      color:#fff;
+      font-weight: 700;
+      cursor:pointer;
+    }
+    .grid {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: 14px;
+      max-width: 920px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 18px;
+      padding: 16px;
+      backdrop-filter: blur(18px);
+    }
+    .muted { opacity: .75; font-size: 13px; }
+    .big { font-size: 28px; font-weight: 800; margin: 6px 0 0; }
+    @media (min-width: 800px){
+      .grid { grid-template-columns: 1fr 1fr; }
+      .span2 { grid-column: span 2; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="top">
+    <div class="brand">Vantage Bridge</div>
+    <button class="btn" id="logoutBtn">Sign out</button>
+  </div>
+
+  <div class="grid">
+    <div class="card span2">
+      <div class="muted">Signed in as</div>
+      <div class="big" id="emailText">Loading…</div>
+      <div class="muted" id="statusText"></div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Portfolio balance (demo)</div>
+      <div class="big">$500.00</div>
+      <div class="muted">This becomes real once we connect deposits + your database tables.</div>
+    </div>
+
+    <div class="card">
+      <div class="muted">Next ROI credit (demo)</div>
+      <div class="big">14 days</div>
+      <div class="muted">Next step: make this a real countdown per user.</div>
+    </div>
+
+    <div class="card span2">
+      <div class="muted">What’s next</div>
+      <div style="margin-top:8px; line-height:1.55;">
+        ✅ Login & email confirmation working<br/>
+        🔒 Next: add Authenticator-app (TOTP) 2FA<br/>
+        📈 Next: market data (stocks + crypto) on the dashboard
+      </div>
+    </div>
+  </div>
+
+<script>
+  const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
+
+  const SITE_URL = "https://luc1lferx.github.io";
+  const LOGIN_URL = SITE_URL + "/index.html";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  const emailText = document.getElementById("emailText");
+  const statusText = document.getElementById("statusText");
+
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    const session = data?.session;
+
+    if (!session) {
+      // Not signed in → go back to login
+      window.location.href = LOGIN_URL;
+      return;
+    }
+
+    emailText.textContent = session.user.email;
+    statusText.textContent = "Session active ✅";
+  })();
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await supabaseClient.auth.signOut();
+    window.location.href = LOGIN_URL;
+  });
+</script>
+
+</body>
+</html>
