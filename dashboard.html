@@ -2,390 +2,738 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vantage Bridge — Dashboard</title>
-  <link rel="stylesheet" href="./styles.css">
+
+  <style>
+    :root{
+      --bg1:#0b1633;
+      --bg2:#0b2b56;
+      --card: rgba(255,255,255,.12);
+      --card2: rgba(255,255,255,.08);
+      --stroke: rgba(255,255,255,.18);
+      --text:#eaf1ff;
+      --muted: rgba(234,241,255,.72);
+      --brand:#2f7dff;
+      --brand2:#1f5fe0;
+      --danger:#ff4d4d;
+      --warn:#ffcc66;
+      --ok:#3bd67f;
+      --shadow: 0 18px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+      --radius2: 16px;
+      --blur: 18px;
+      --max: 1100px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: var(--font);
+      color: var(--text);
+      min-height:100vh;
+      background:
+        radial-gradient(1100px 700px at 20% 10%, rgba(47,125,255,.35), transparent 55%),
+        radial-gradient(900px 600px at 80% 20%, rgba(59,214,127,.18), transparent 60%),
+        radial-gradient(900px 700px at 50% 90%, rgba(255,255,255,.08), transparent 60%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      overflow-x:hidden;
+    }
+    .wrap{max-width: var(--max); margin:0 auto; padding: 22px 16px 54px;}
+    .topbar{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding: 10px 4px 18px;
+    }
+    .brand{display:flex; align-items:center; gap:10px;}
+    .logo{
+      width:34px; height:34px; border-radius:12px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,.7), rgba(255,255,255,.15) 45%, rgba(47,125,255,.25));
+      border: 1px solid rgba(255,255,255,.25);
+      backdrop-filter: blur(var(--blur));
+      box-shadow: 0 10px 26px rgba(0,0,0,.25);
+    }
+    .brand h1{font-size:15px; margin:0; line-height:1.1;}
+    .brand span{display:block; font-size:12px; color: var(--muted); margin-top:2px;}
+    .actions{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    button{
+      border:0;
+      border-radius: 14px;
+      padding: 11px 14px;
+      font-weight: 800;
+      cursor:pointer;
+      color: white;
+      background: linear-gradient(180deg, var(--brand), var(--brand2));
+      box-shadow: 0 12px 30px rgba(47,125,255,.25);
+    }
+    button.secondary{
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(234,241,255,.92);
+      box-shadow:none;
+    }
+    button.ghost{
+      background: transparent;
+      border: 1px solid rgba(255,255,255,.18);
+      color: rgba(234,241,255,.9);
+      box-shadow:none;
+    }
+    button:disabled{opacity:.55; cursor:not-allowed}
+
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: 14px;
+      align-items:start;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
+
+    .card{
+      background: linear-gradient(180deg, var(--card), var(--card2));
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(var(--blur));
+    }
+    .card h2{margin:0 0 6px; font-size: 18px;}
+    .muted{color: var(--muted); font-size: 13px; line-height:1.55}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .pill{
+      padding:10px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.16);
+      color: rgba(234,241,255,.85);
+      font-size: 12px;
+      font-weight:700;
+    }
+
+    .statusBox{
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      color: rgba(234,241,255,.9);
+      font-size: 13px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-height: 42px;
+    }
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.ok{background: var(--ok)}
+    .dot.bad{background: var(--danger)}
+    .dot.warn{background: var(--warn)}
+    .dot.neutral{background: rgba(255,255,255,.45)}
+
+    .twoCol{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 640px){ .twoCol{grid-template-columns:1fr} }
+
+    label{font-size:12px; color: rgba(234,241,255,.78); display:block; margin: 8px 0 6px;}
+    input, select, textarea{
+      width: 100%;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.16);
+      background: rgba(10,18,35,.35);
+      color: var(--text);
+      outline:none;
+      backdrop-filter: blur(10px);
+    }
+    textarea{min-height: 86px; resize: vertical}
+    input::placeholder, textarea::placeholder{color: rgba(234,241,255,.45)}
+
+    table{
+      width:100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      overflow:hidden;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      margin-top: 10px;
+    }
+    th, td{
+      padding: 12px 12px;
+      text-align:left;
+      border-bottom: 1px solid rgba(255,255,255,.10);
+      color: rgba(234,241,255,.9);
+      font-size: 13px;
+    }
+    th{color: rgba(234,241,255,.78); font-weight: 800; background: rgba(255,255,255,.06)}
+    tr:last-child td{border-bottom:0}
+
+    .miniGrid{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 10px;
+    }
+    @media (max-width: 640px){ .miniGrid{grid-template-columns:1fr} }
+    .metric{
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.06);
+      padding: 12px;
+    }
+    .metric .k{font-size:12px; color: rgba(234,241,255,.7); font-weight:800}
+    .metric .v{font-size:20px; font-weight:900; margin-top:6px}
+
+    .divider{height:1px; background: rgba(255,255,255,.12); margin: 12px 0;}
+    a{color: rgba(234,241,255,.92); text-decoration:none; border-bottom: 1px dashed rgba(234,241,255,.35)}
+    a:hover{opacity:.9}
+
+    .hidden{display:none !important}
+  </style>
 </head>
+
 <body>
-  <div class="vb-wrap">
-    <div class="vb-top">
-      <div class="vb-brand"><span class="vb-dot"></span> Dashboard</div>
-      <div class="vb-row">
-        <button class="vb-btn" id="refreshBtn">Refresh</button>
-        <button class="vb-btn vb-btn-primary" id="signOutBtn">Sign out</button>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h1>Vantage Bridge</h1>
+          <span>Dashboard</span>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="secondary" id="btnRefresh">Refresh</button>
+        <button class="ghost" id="btnBackHome">Home</button>
+        <button id="btnSignOut">Sign out</button>
       </div>
     </div>
 
-    <div class="vb-grid">
-      <div class="vb-glass vb-card vb-span-2">
-        <div class="vb-title">Account</div>
-        <div class="vb-muted" id="who">Loading session…</div>
-        <div class="vb-status" id="status">Loading…</div>
-      </div>
+    <div class="grid">
+      <!-- LEFT COLUMN -->
+      <div class="card">
+        <div class="row" style="justify-content:space-between">
+          <div>
+            <h2>Account</h2>
+            <div class="muted" id="whoami">Loading…</div>
+          </div>
+          <div class="pill" id="approvalPill">Status: …</div>
+        </div>
 
-      <!-- Funding (Approved only) -->
-      <div class="vb-glass vb-card vb-span-2">
-        <div class="vb-title">Funding (Crypto-only)</div>
-        <div class="vb-muted" id="fundingStatus">Checking approval status…</div>
+        <div class="statusBox" id="statusBox" role="status" aria-live="polite">
+          <div class="dot neutral" id="statusDot"></div>
+          <div id="statusText">Ready.</div>
+        </div>
 
-        <div id="fundingApproved" style="display:none; margin-top:12px;">
-          <div class="vb-glass vb-card" style="padding:14px;">
-            <div class="vb-muted">
-              Send funds to the address below, then submit your transaction hash for confirmation.
-            </div>
-            <div class="vb-small" style="margin-top:8px;">
-              <b>USDT (ERC20)</b> — send only USDT on the Ethereum (ERC20) network to the address below.
-            </div>
-            <div class="vb-status" id="addrUsdt"></div>
+        <div class="divider"></div>
 
-            <div class="vb-small" style="margin-top:10px;">
-              <b>BTC</b> — send only BTC on the Bitcoin network.
-            </div>
-            <div class="vb-status" id="addrBtc"></div>
+        <h2>Market overview</h2>
+        <div class="muted">Live crypto prices (public). Stocks will be added later via a backend proxy.</div>
 
-            <hr class="vb-hr">
+        <div class="miniGrid" id="prices">
+          <div class="metric"><div class="k">BTC</div><div class="v" id="pBTC">—</div></div>
+          <div class="metric"><div class="k">ETH</div><div class="v" id="pETH">—</div></div>
+          <div class="metric"><div class="k">SOL</div><div class="v" id="pSOL">—</div></div>
+        </div>
 
-            <div class="vb-grid" style="grid-template-columns: 1fr; gap:10px;">
-              <div>
-                <label class="vb-label" for="asset">Asset</label>
-                <input class="vb-input" id="asset" value="USDT" aria-label="Asset">
+        <table aria-label="Crypto prices table" style="margin-top:12px">
+          <thead>
+            <tr><th>Asset</th><th>Price (USD)</th><th>24h</th></tr>
+          </thead>
+          <tbody id="priceRows">
+            <tr><td>Bitcoin (BTC)</td><td id="tBTC">—</td><td id="cBTC">—</td></tr>
+            <tr><td>Ethereum (ETH)</td><td id="tETH">—</td><td id="cETH">—</td></tr>
+            <tr><td>Solana (SOL)</td><td id="tSOL">—</td><td id="cSOL">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="divider"></div>
+
+        <!-- FUNDING widget (approved only) -->
+        <div id="fundingSection">
+          <h2>Funding (Crypto-only)</h2>
+          <div class="muted">
+            Approved investors can fund via BTC or USDT (ERC-20). After sending, submit your TX hash for review.
+          </div>
+
+          <div class="twoCol">
+            <div class="metric">
+              <div class="k">USDT (ERC-20)</div>
+              <div class="v" style="font-size:14px; font-weight:800; line-height:1.2; word-break:break-all">
+                0x23DB4a4e29ABfdAc18150e3Fc18941384EAe37d4
               </div>
-              <div>
-                <label class="vb-label" for="network">Network</label>
-                <input class="vb-input" id="network" value="ERC20" aria-label="Network">
-              </div>
-              <div>
-                <label class="vb-label" for="amount">Amount (optional)</label>
-                <input class="vb-input" id="amount" placeholder="e.g. 500" inputmode="decimal" aria-label="Amount">
-              </div>
-              <div>
-                <label class="vb-label" for="txhash">Transaction hash (TXID)</label>
-                <input class="vb-input" id="txhash" placeholder="Paste your TX hash" aria-label="Transaction hash">
-              </div>
             </div>
-
-            <div class="vb-row" style="margin-top:12px;">
-              <button class="vb-btn vb-btn-primary" id="submitTx" style="flex:1;">Submit TX Hash</button>
-            </div>
-
-            <div class="vb-status" id="txMsg">—</div>
-
-            <div class="vb-small">
-              Status flow: <b>Pending</b> → confirmed by admin → <b>Approved</b> / <b>Rejected</b>.
+            <div class="metric">
+              <div class="k">BTC</div>
+              <div class="v" style="font-size:14px; font-weight:800; line-height:1.2; word-break:break-all">
+                bc1qmge3upzllj4z7mpwsq4ljmvgzjeur2we7nc5xn
+              </div>
             </div>
           </div>
 
-          <div style="height:12px;"></div>
+          <div class="twoCol">
+            <div>
+              <label for="asset">Asset</label>
+              <select id="asset">
+                <option value="BTC">BTC</option>
+                <option value="USDT_ERC20">USDT (ERC-20)</option>
+              </select>
+            </div>
+            <div>
+              <label for="amount">Amount (optional)</label>
+              <input id="amount" placeholder="e.g., 2500" inputmode="decimal" />
+            </div>
+          </div>
 
-          <div class="vb-glass vb-card" style="padding:14px;">
-            <div class="vb-title">Your submissions</div>
-            <div class="vb-muted" id="myDeposits">Loading…</div>
+          <label for="txhash">Transaction hash</label>
+          <input id="txhash" placeholder="Paste TX hash here…" />
+
+          <div class="row" style="margin-top:10px">
+            <button id="btnSubmitTx">Submit TX hash</button>
+            <button class="secondary" id="btnViewApplication">Apply / Update application</button>
+          </div>
+
+          <div class="statusBox" id="txBox">
+            <div class="dot neutral" id="txDot"></div>
+            <div id="txText">No submission yet.</div>
           </div>
         </div>
 
-        <div id="fundingNotApproved" style="display:none; margin-top:12px;">
-          <div class="vb-status">
-            Your account is under review. Please complete the application to be considered for approval.
+        <!-- NOT approved message -->
+        <div id="notApprovedSection" class="hidden">
+          <h2>Funding (Crypto-only)</h2>
+          <div class="muted">
+            Status: <b>Under review</b>. Complete the application first. Funding unlocks after approval.
           </div>
-          <div class="vb-row" style="margin-top:10px;">
-            <a class="vb-btn vb-btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog" target="_blank" rel="noopener" style="flex:1; text-align:center;">Apply to Invest</a>
+          <div class="row" style="margin-top:10px">
+            <button class="secondary" id="btnApplyNow">Start / Continue application</button>
           </div>
         </div>
-      </div>
 
-      <!-- Admin panel -->
-      <div class="vb-glass vb-card vb-span-2" id="adminPanel" style="display:none;">
-        <div class="vb-title">Admin</div>
-        <div class="vb-muted">Approve investors and confirm deposits.</div>
+        <div class="divider"></div>
 
-        <hr class="vb-hr">
-
-        <div class="vb-title">Approve an investor</div>
-        <div class="vb-row">
-          <input class="vb-input" id="approveEmail" placeholder="Investor email" style="flex:1;">
-          <button class="vb-btn vb-btn-primary" id="approveBtn">Set Approved</button>
+        <h2>Support</h2>
+        <div class="muted">
+          Contact: <a href="mailto:vantagebridge.invest@outlook.com">vantagebridge.invest@outlook.com</a>
         </div>
-        <div class="vb-status" id="approveMsg">—</div>
 
-        <hr class="vb-hr">
-
-        <div class="vb-title">Pending deposits</div>
-        <div class="vb-muted" id="adminDeposits">Loading…</div>
-      </div>
-
-      <div class="vb-glass vb-card vb-span-2">
-        <div class="vb-title">Support</div>
-        <div class="vb-muted">
-          Contact: <a href="mailto:vantagebridge.invest@outlook.com"><b>vantagebridge.invest@outlook.com</b></a>
-        </div>
-        <div class="vb-small" style="margin-top:10px;">
+        <div class="fineprint muted" style="margin-top:12px">
           Investing involves risk. Returns are not guaranteed. Capital may be lost.
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="card">
+        <h2>Security (Authenticator 2FA)</h2>
+        <div class="muted">
+          Enable an Authenticator app (Google Authenticator, Authy, etc.). This adds a second factor when you sign in (when enforced).
+        </div>
+
+        <div class="divider"></div>
+
+        <div id="mfaState" class="muted">Checking MFA status…</div>
+
+        <div id="mfaEnroll" class="hidden">
+          <button id="btnEnroll">Enable Authenticator 2FA</button>
+          <div class="muted" style="margin-top:10px">
+            You’ll get a QR code + secret. Scan it, then enter the 6-digit code to finish setup.
+          </div>
+
+          <div id="qrWrap" class="hidden" style="margin-top:12px">
+            <div class="metric">
+              <div class="k">Scan QR in Authenticator</div>
+              <div style="margin-top:10px">
+                <img id="qrImg" alt="Authenticator QR code" style="max-width:100%; border-radius:14px; border:1px solid rgba(255,255,255,.14)" />
+              </div>
+              <div class="muted" style="margin-top:10px; word-break:break-all">
+                Secret: <b id="mfaSecret">—</b>
+              </div>
+            </div>
+
+            <label for="mfaCode">Enter 6-digit code</label>
+            <input id="mfaCode" placeholder="123456" inputmode="numeric" />
+
+            <div class="row" style="margin-top:10px">
+              <button id="btnVerifyMfa" class="secondary">Verify & Finish</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="mfaEnabled" class="hidden">
+          <div class="statusBox">
+            <div class="dot ok"></div>
+            <div>Authenticator 2FA is enabled for your account.</div>
+          </div>
+          <div class="muted" style="margin-top:10px">
+            (Later we can enforce “2FA required” before funding.)
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- ADMIN VIEW -->
+        <div id="adminPanel" class="hidden">
+          <h2>Admin</h2>
+          <div class="muted">Visible only to: <b>87sydmatthews55@gmail.com</b></div>
+
+          <div class="divider"></div>
+
+          <h2 style="font-size:16px;">Investor approvals</h2>
+          <div class="muted">Approve users so they can see funding instructions and submit TX hashes.</div>
+
+          <label for="adminEmail">Investor email</label>
+          <input id="adminEmail" placeholder="user@email.com" />
+
+          <div class="row" style="margin-top:10px">
+            <button id="btnApprove" class="secondary">Approve investor</button>
+            <button id="btnSetReview" class="ghost">Set under review</button>
+          </div>
+
+          <div class="statusBox" id="adminBox">
+            <div class="dot neutral" id="adminDot"></div>
+            <div id="adminText">Admin ready.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <h2 style="font-size:16px;">Recent TX submissions</h2>
+          <div class="muted">We can display real rows after you create the table in Supabase SQL editor.</div>
+
+          <table>
+            <thead><tr><th>User</th><th>Asset</th><th>TX</th><th>Status</th></tr></thead>
+            <tbody id="txTable">
+              <tr><td colspan="4" class="muted">No data loaded yet.</td></tr>
+            </tbody>
+          </table>
+
+          <div class="row" style="margin-top:10px">
+            <button id="btnLoadTx" class="ghost">Load latest TX</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
   <script type="module">
-    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
     const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
     const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
-
-    const APP_BASE = "https://luc1lferx.github.io/investment-site";
-    const PORTAL_URL = APP_BASE + "/portal.html";
-
-    const CONTACT_EMAIL = "vantagebridge.invest@outlook.com";
     const ADMIN_EMAIL = "87sydmatthews55@gmail.com";
 
-    const GOOGLE_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog";
-
-    const USDT_ERC20_ADDR = "0x23DB4a4e29ABfdAc18150e3Fc18941384EAe37d4";
-    const BTC_ADDR = "bc1qmge3upzllj4z7mpwsq4ljmvgzjeur2we7nc5xn";
-
     const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    const $ = (id) => document.getElementById(id);
 
-    const who = document.getElementById("who");
-    const statusEl = document.getElementById("status");
+    function setBox(dotId, textId, msg, kind="neutral"){
+      $(textId).textContent = msg;
+      $(dotId).className = "dot " + (kind === "ok" ? "ok" : kind === "bad" ? "bad" : kind === "warn" ? "warn" : "neutral");
+    }
+    function setMain(msg, kind="neutral"){ setBox("statusDot","statusText", msg, kind); }
 
-    const fundingStatus = document.getElementById("fundingStatus");
-    const fundingApproved = document.getElementById("fundingApproved");
-    const fundingNotApproved = document.getElementById("fundingNotApproved");
+    $("btnBackHome").addEventListener("click", () => window.location.href = "./index.html");
+    $("btnRefresh").addEventListener("click", () => init());
+    $("btnSignOut").addEventListener("click", async () => {
+      await supabase.auth.signOut();
+      window.location.href = "./portal.html";
+    });
 
-    const addrUsdt = document.getElementById("addrUsdt");
-    const addrBtc = document.getElementById("addrBtc");
+    $("btnViewApplication").addEventListener("click", () => {
+      window.open("https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog", "_blank");
+    });
+    $("btnApplyNow")?.addEventListener("click", () => {
+      window.open("https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog", "_blank");
+    });
 
-    const myDeposits = document.getElementById("myDeposits");
-
-    const adminPanel = document.getElementById("adminPanel");
-    const adminDeposits = document.getElementById("adminDeposits");
-
-    addrUsdt.textContent = USDT_ERC20_ADDR;
-    addrBtc.textContent = BTC_ADDR;
-
-    function setStatus(msg){ statusEl.textContent = msg; }
-
-    async function requireSession(){
-      const { data } = await supabase.auth.getSession();
-      if (!data?.session) {
-        window.location.href = PORTAL_URL;
+    async function requireAuth(){
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { window.location.href = "./portal.html"; return null; }
+      if (!user.email_confirmed_at){
+        await supabase.auth.signOut();
+        window.location.href = "./portal.html";
         return null;
       }
-      return data.session;
+      return user;
     }
 
-    async function ensureProfile(user){
-      // Fallback upsert (in case trigger didn’t run)
-      await supabase.from("profiles").upsert(
-        { user_id: user.id, email: user.email },
-        { onConflict: "user_id" }
-      );
+    // ---------- MARKET (CRYPTO) ----------
+    async function loadCrypto(){
+      try{
+        const url = "https://api.coingecko.com/api/v3/simple/price?ids=bitcoin,ethereum,solana&vs_currencies=usd&include_24hr_change=true";
+        const r = await fetch(url, { cache: "no-store" });
+        const j = await r.json();
+
+        const btc = j.bitcoin?.usd, eth = j.ethereum?.usd, sol = j.solana?.usd;
+        const btcC = j.bitcoin?.usd_24h_change, ethC = j.ethereum?.usd_24h_change, solC = j.solana?.usd_24h_change;
+
+        const fmt = (n) => n == null ? "—" : "$" + Number(n).toLocaleString(undefined,{maximumFractionDigits:2});
+        const pct = (n) => n == null ? "—" : (n>=0?"+":"") + Number(n).toFixed(2) + "%";
+
+        $("pBTC").textContent = fmt(btc);
+        $("pETH").textContent = fmt(eth);
+        $("pSOL").textContent = fmt(sol);
+
+        $("tBTC").textContent = fmt(btc);
+        $("tETH").textContent = fmt(eth);
+        $("tSOL").textContent = fmt(sol);
+
+        $("cBTC").textContent = pct(btcC);
+        $("cETH").textContent = pct(ethC);
+        $("cSOL").textContent = pct(solC);
+      }catch(e){
+        // silently ignore (rate limits happen)
+      }
     }
 
-    async function loadFundingState(user){
-      fundingStatus.textContent = "Checking approval status…";
+    // ---------- APPROVAL LOGIC ----------
+    // We store approval in a "profiles" table. If you haven't created it yet,
+    // dashboard still works but defaults to "under review".
+    async function getApproval(email){
+      try{
+        const { data, error } = await supabase
+          .from("profiles")
+          .select("status, role")
+          .eq("email", email)
+          .maybeSingle();
 
-      const { data: profile, error } = await supabase
-        .from("profiles")
-        .select("approved")
-        .eq("user_id", user.id)
-        .single();
-
-      if (error) {
-        fundingStatus.textContent = "Profile error: " + error.message;
-        return;
+        if (error) return { status: "under_review", role: "investor" };
+        return data ?? { status: "under_review", role: "investor" };
+      }catch{
+        return { status: "under_review", role: "investor" };
       }
-
-      const approved = !!profile?.approved;
-
-      if (!approved) {
-        fundingStatus.textContent = "Status: Under review ⏳";
-        fundingApproved.style.display = "none";
-        fundingNotApproved.style.display = "block";
-        return;
-      }
-
-      fundingStatus.textContent = "Status: Approved ✅ Funding enabled.";
-      fundingApproved.style.display = "block";
-      fundingNotApproved.style.display = "none";
-      await loadMyDeposits(user);
     }
 
-    async function loadMyDeposits(user){
-      myDeposits.textContent = "Loading…";
+    function applyApprovalUI(status){
+      const approved = status === "approved";
+      $("fundingSection").classList.toggle("hidden", !approved);
+      $("notApprovedSection").classList.toggle("hidden", approved);
 
-      const { data, error } = await supabase
-        .from("deposits")
-        .select("created_at, asset, network, amount, tx_hash, status, admin_note")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(10);
-
-      if (error) { myDeposits.textContent = "Error: " + error.message; return; }
-      if (!data || data.length === 0) { myDeposits.textContent = "No submissions yet."; return; }
-
-      myDeposits.innerHTML = data.map(d => {
-        const shortHash = d.tx_hash.length > 18 ? d.tx_hash.slice(0,10) + "…" + d.tx_hash.slice(-6) : d.tx_hash;
-        return `
-          <div style="padding:10px; border-top:1px solid rgba(16,55,102,0.12);">
-            <div><b>${d.asset}</b> (${d.network}) — <b>${d.status.toUpperCase()}</b></div>
-            <div class="vb-small">TX: ${shortHash}</div>
-            <div class="vb-small">Amount: ${d.amount ?? "—"} • ${new Date(d.created_at).toLocaleString()}</div>
-            ${d.admin_note ? `<div class="vb-small"><b>Note:</b> ${d.admin_note}</div>` : ""}
-          </div>
-        `;
-      }).join("");
+      $("approvalPill").textContent = approved ? "Status: Approved ✅" : "Status: Under review ⏳";
+      if (approved) setMain("Approved. Funding is enabled.", "ok");
+      else setMain("Under review. Complete your application for approval.", "warn");
     }
 
-    document.getElementById("submitTx").addEventListener("click", async () => {
-      const txMsg = document.getElementById("txMsg");
-      txMsg.textContent = "Submitting…";
+    // ---------- TX SUBMISSION ----------
+    $("btnSubmitTx").addEventListener("click", async () => {
+      const asset = $("asset").value;
+      const amount = $("amount").value.trim();
+      const tx = $("txhash").value.trim();
 
-      const session = await requireSession();
-      if (!session) return;
+      if (!tx) return setBox("txDot","txText","Please paste a TX hash.", "bad");
 
-      const user = session.user;
+      setBox("txDot","txText","Submitting…", "neutral");
 
-      const asset = document.getElementById("asset").value.trim();
-      const network = document.getElementById("network").value.trim();
-      const amountRaw = document.getElementById("amount").value.trim();
-      const tx_hash = document.getElementById("txhash").value.trim();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
 
-      if (!asset || !network || !tx_hash) {
-        txMsg.textContent = "Please fill Asset, Network, and TX hash.";
-        return;
+      try{
+        const { error } = await supabase
+          .from("funding_submissions")
+          .insert([{
+            user_id: user.id,
+            email: user.email,
+            asset,
+            amount: amount || null,
+            tx_hash: tx,
+            status: "pending"
+          }]);
+
+        if (error) throw error;
+
+        setBox("txDot","txText","TX submitted. Status: pending confirmation.", "warn");
+        $("txhash").value = "";
+      }catch(e){
+        // If table isn't created yet, show a clear message
+        setBox("txDot","txText","Could not save TX yet. (We need to create the Supabase table first.)", "bad");
       }
-
-      const amount = amountRaw ? Number(amountRaw) : null;
-
-      const { error } = await supabase.from("deposits").insert([{
-        user_id: user.id,
-        asset,
-        network,
-        amount,
-        tx_hash,
-        status: "pending"
-      }]);
-
-      if (error) {
-        txMsg.textContent = "Error: " + error.message;
-        return;
-      }
-
-      txMsg.textContent = "Submitted ✅ Status: PENDING confirmation.";
-      document.getElementById("txhash").value = "";
-      await loadMyDeposits(user);
     });
 
-    async function loadAdminPanel(user){
-      // Show admin panel only if logged in email matches admin email AND user is in admins table
-      if ((user.email || "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()) {
-        adminPanel.style.display = "none";
-        return;
+    // ---------- MFA (TOTP) ----------
+    async function loadMfa(){
+      $("mfaEnroll").classList.add("hidden");
+      $("mfaEnabled").classList.add("hidden");
+      $("qrWrap").classList.add("hidden");
+      $("mfaState").textContent = "Checking MFA status…";
+
+      try{
+        const { data, error } = await supabase.auth.mfa.listFactors();
+        if (error) throw error;
+
+        const totp = (data?.totp ?? []);
+        const hasVerified = totp.some(f => f.status === "verified");
+
+        if (hasVerified){
+          $("mfaState").textContent = "Authenticator is enabled.";
+          $("mfaEnabled").classList.remove("hidden");
+        } else {
+          $("mfaState").textContent = "Authenticator not enabled yet.";
+          $("mfaEnroll").classList.remove("hidden");
+        }
+      }catch(e){
+        $("mfaState").textContent = "MFA status unavailable (we can still enable it later).";
+        $("mfaEnroll").classList.remove("hidden");
       }
-
-      const { data: adminRow } = await supabase
-        .from("admins")
-        .select("user_id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-
-      const isAdmin = !!adminRow;
-      adminPanel.style.display = isAdmin ? "block" : "none";
-      if (!isAdmin) return;
-
-      await loadPendingDeposits();
     }
 
-    async function loadPendingDeposits(){
-      adminDeposits.textContent = "Loading…";
+    let enrollFactorId = null;
 
-      const { data, error } = await supabase
-        .from("deposits")
-        .select("id, created_at, user_id, asset, network, amount, tx_hash, status")
-        .eq("status", "pending")
-        .order("created_at", { ascending: false })
-        .limit(25);
+    $("btnEnroll").addEventListener("click", async () => {
+      $("btnEnroll").disabled = true;
+      $("mfaState").textContent = "Generating QR…";
 
-      if (error) { adminDeposits.textContent = "Error: " + error.message; return; }
-      if (!data || data.length === 0) { adminDeposits.textContent = "No pending deposits."; return; }
+      try{
+        const { data, error } = await supabase.auth.mfa.enroll({ factorType: "totp" });
+        if (error) throw error;
 
-      adminDeposits.innerHTML = data.map(d => {
-        const shortHash = d.tx_hash.length > 18 ? d.tx_hash.slice(0,10) + "…" + d.tx_hash.slice(-6) : d.tx_hash;
-        return `
-          <div style="padding:10px; border-top:1px solid rgba(16,55,102,0.12);">
-            <div><b>${d.asset}</b> (${d.network}) — ${d.amount ?? "—"} — <b>${shortHash}</b></div>
-            <div class="vb-small">User ID: ${d.user_id}</div>
-            <div class="vb-small">${new Date(d.created_at).toLocaleString()}</div>
-            <div class="vb-row" style="margin-top:10px;">
-              <button class="vb-btn vb-btn-primary" onclick="adminSetStatus(${d.id}, 'approved')">Approve</button>
-              <button class="vb-btn" onclick="adminSetStatus(${d.id}, 'rejected')">Reject</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
+        enrollFactorId = data.id;
+        $("mfaSecret").textContent = data.totp.secret;
 
-    window.adminSetStatus = async (depositId, status) => {
-      const note = prompt("Optional admin note (leave blank if none):") || null;
+        // Use the QR from Supabase (data.totp.qr_code) if present, else build a QR from the URI
+        const qr = data.totp.qr_code ?? null;
+        const uri = data.totp.uri;
+
+        if (qr){
+          $("qrImg").src = qr;
+        } else {
+          // fallback: use a public QR generator
+          $("qrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(uri);
+        }
+
+        $("qrWrap").classList.remove("hidden");
+        $("mfaState").textContent = "Scan QR, then enter the 6-digit code.";
+      }catch(e){
+        $("mfaState").textContent = "Could not start enrollment. Try again.";
+      }finally{
+        $("btnEnroll").disabled = false;
+      }
+    });
+
+    $("btnVerifyMfa").addEventListener("click", async () => {
+      const code = $("mfaCode").value.trim();
+      if (!code || code.length < 6) return;
+
+      $("btnVerifyMfa").disabled = true;
+      $("mfaState").textContent = "Verifying…";
+
+      try{
+        // create a challenge + verify
+        const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId: enrollFactorId });
+        if (chErr) throw chErr;
+
+        const { error: vErr } = await supabase.auth.mfa.verify({
+          factorId: enrollFactorId,
+          challengeId: challenge.id,
+          code
+        });
+        if (vErr) throw vErr;
+
+        $("mfaState").textContent = "Authenticator enabled ✅";
+        await loadMfa();
+      }catch(e){
+        $("mfaState").textContent = "Invalid code. Try again.";
+      }finally{
+        $("btnVerifyMfa").disabled = false;
+      }
+    });
+
+    // ---------- ADMIN ----------
+    function adminSet(msg, kind="neutral"){ setBox("adminDot","adminText", msg, kind); }
+
+    async function upsertProfile(email, status){
+      const role = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "investor";
 
       const { error } = await supabase
-        .from("deposits")
-        .update({ status, admin_note: note })
-        .eq("id", depositId);
-
-      if (error) return alert("Error: " + error.message);
-
-      alert("Updated ✅");
-      await loadPendingDeposits();
-    };
-
-    document.getElementById("approveBtn").addEventListener("click", async () => {
-      const email = document.getElementById("approveEmail").value.trim().toLowerCase();
-      const approveMsg = document.getElementById("approveMsg");
-      approveMsg.textContent = "Updating…";
-
-      if (!email) { approveMsg.textContent = "Enter an email."; return; }
-
-      const { error } = await supabase
         .from("profiles")
-        .update({ approved: true })
-        .eq("email", email);
+        .upsert([{ email, status, role }], { onConflict: "email" });
 
-      if (error) { approveMsg.textContent = "Error: " + error.message; return; }
+      if (error) throw error;
+    }
 
-      approveMsg.textContent = "Approved ✅ (If the email is correct).";
+    $("btnApprove").addEventListener("click", async () => {
+      const email = $("adminEmail").value.trim();
+      if (!email) return adminSet("Enter an investor email.", "bad");
+      adminSet("Saving…", "neutral");
+      try{
+        await upsertProfile(email, "approved");
+        adminSet("Investor approved ✅", "ok");
+      }catch{
+        adminSet("Could not save approval (create profiles table first).", "bad");
+      }
     });
 
-    document.getElementById("signOutBtn").addEventListener("click", async () => {
-      setStatus("Signing out…");
-      await supabase.auth.signOut();
-      window.location.href = PORTAL_URL;
+    $("btnSetReview").addEventListener("click", async () => {
+      const email = $("adminEmail").value.trim();
+      if (!email) return adminSet("Enter an investor email.", "bad");
+      adminSet("Saving…", "neutral");
+      try{
+        await upsertProfile(email, "under_review");
+        adminSet("Investor set to under review ⏳", "warn");
+      }catch{
+        adminSet("Could not save (create profiles table first).", "bad");
+      }
     });
 
-    document.getElementById("refreshBtn").addEventListener("click", async () => {
-      setStatus("Refreshing…");
-      const session = await requireSession();
-      if (!session) return;
-      const user = session.user;
-      await loadFundingState(user);
-      await loadAdminPanel(user);
-      setStatus("Ready.");
+    $("btnLoadTx").addEventListener("click", async () => {
+      adminSet("Loading TX…", "neutral");
+      try{
+        const { data, error } = await supabase
+          .from("funding_submissions")
+          .select("email, asset, tx_hash, status, created_at")
+          .order("created_at", { ascending: false })
+          .limit(10);
+
+        if (error) throw error;
+
+        const body = $("txTable");
+        body.innerHTML = "";
+
+        if (!data || data.length === 0){
+          body.innerHTML = `<tr><td colspan="4" class="muted">No submissions yet.</td></tr>`;
+          adminSet("No submissions found.", "warn");
+          return;
+        }
+
+        for (const row of data){
+          const txShort = row.tx_hash ? row.tx_hash.slice(0,10) + "…" + row.tx_hash.slice(-8) : "—";
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.email ?? "—"}</td>
+            <td>${row.asset ?? "—"}</td>
+            <td title="${row.tx_hash ?? ""}">${txShort}</td>
+            <td>${row.status ?? "—"}</td>
+          `;
+          body.appendChild(tr);
+        }
+        adminSet("Loaded latest TX ✅", "ok");
+      }catch{
+        adminSet("Could not load TX (create funding_submissions table first).", "bad");
+      }
     });
 
-    // Boot
-    (async () => {
-      const session = await requireSession();
-      if (!session) return;
+    // ---------- INIT ----------
+    async function init(){
+      const user = await requireAuth();
+      if (!user) return;
 
-      const user = session.user;
+      $("whoami").textContent = `Signed in as ${user.email}`;
+      const isAdmin = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+      $("adminPanel").classList.toggle("hidden", !isAdmin);
 
-      who.textContent = `Signed in as ${user.email}`;
-      await ensureProfile(user);
+      // Approval
+      const prof = await getApproval(user.email);
+      applyApprovalUI(prof.status);
 
-      setStatus("Ready.");
-      await loadFundingState(user);
-      await loadAdminPanel(user);
-    })();
+      // Crypto prices
+      await loadCrypto();
+
+      // MFA
+      await loadMfa();
+    }
+
+    init();
+    // refresh prices every 60s
+    setInterval(loadCrypto, 60000);
   </script>
 </body>
 </html>
