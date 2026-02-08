@@ -1,271 +1,364 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vantage Bridge Investments</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-  <style>
-    :root {
-      --primary: #288cfa;
-      --navy: #103766;
-      --bg: #eef3f8;
-      --card: rgba(255,255,255,0.9);
-      --text: #1f2937;
-      --muted: #6b7280;
-      --radius: 18px;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background: linear-gradient(180deg, #dbeafe, #eef3f8);
-      color: var(--text);
-    }
-
-    .container {
-      max-width: 1100px;
-      margin: auto;
-      padding: 32px 20px 80px;
-    }
-
-    .card {
-      background: var(--card);
-      border-radius: var(--radius);
-      padding: 36px;
-      margin-bottom: 40px;
-      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
-    }
-
-    h1, h2, h3 {
-      margin-top: 0;
-      color: var(--navy);
-    }
-
-    p {
-      line-height: 1.7;
-      color: var(--text);
-    }
-
-    .hero h1 {
-      font-size: 42px;
-      margin-bottom: 16px;
-    }
-
-    .hero-actions {
-      display: flex;
-      gap: 16px;
-      margin-top: 24px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      padding: 14px 26px;
-      border-radius: 999px;
-      font-weight: 600;
-      border: none;
-      cursor: pointer;
-      font-size: 16px;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .btn-primary {
-      background: var(--primary);
-      color: white;
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid var(--primary);
-      color: var(--primary);
-    }
-
-    .steps {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-    }
-
-    .step {
-      background: #f8fafc;
-      padding: 20px;
-      border-radius: 14px;
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 20px;
-    }
-
-    th, td {
-      padding: 14px;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-    }
-
-    th {
-      color: var(--navy);
-    }
-
-    .faq-item {
-      margin-bottom: 16px;
-    }
-
-    .faq-item strong {
-      display: block;
-      margin-bottom: 6px;
-    }
-
-    footer {
-      font-size: 14px;
-      color: var(--muted);
-      margin-top: 60px;
-      padding-top: 24px;
-      border-top: 1px solid #e5e7eb;
-    }
-  </style>
+  <meta name="description" content="Private capital access portal with structured onboarding, secure access, and crypto-only funding." />
+  <link rel="stylesheet" href="./styles.css" />
 </head>
 
 <body>
-  <div class="container">
+  <a class="skip-link" href="#main">Skip to content</a>
 
-    <!-- 1. HERO -->
-    <section class="card hero">
-      <h1>Private capital access, built for clarity and control.</h1>
-      <p>
-        Vantage Bridge Investments provides qualified investors with structured access
-        to private capital strategies. All applications are reviewed manually.
-        Approved investors fund and manage their accounts through a secure portal.
-      </p>
-
-      <div class="hero-actions">
-        <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform">
-          Start Application
-        </a>
-        <a class="btn btn-outline" href="dashboard.html">
-          Access Portal
-        </a>
-      </div>
-    </section>
-
-    <!-- 2. HOW ONBOARDING WORKS -->
-    <section class="card">
-      <h2>How onboarding works</h2>
-      <div class="steps">
-        <div class="step">
-          <h3>1. Apply</h3>
-          <p>Submit an investor application for review.</p>
-        </div>
-        <div class="step">
-          <h3>2. Review</h3>
-          <p>Applications are manually evaluated for eligibility.</p>
-        </div>
-        <div class="step">
-          <h3>3. Approval</h3>
-          <p>Approved investors receive portal access.</p>
-        </div>
-        <div class="step">
-          <h3>4. Fund</h3>
-          <p>Fund your account using cryptocurrency inside the portal.</p>
+  <header class="topbar">
+    <div class="container topbar__inner">
+      <div class="brand">
+        <div class="brand__mark" aria-hidden="true"></div>
+        <div class="brand__text">
+          <div class="brand__name">Vantage Bridge</div>
+          <div class="brand__sub">Investments</div>
         </div>
       </div>
-    </section>
 
-    <!-- 3. INVESTMENT TERMS -->
-    <section class="card">
-      <h2>Investment terms (overview)</h2>
-      <p>Returns accrue based on portfolio performance. Profits are credited bi-weekly.</p>
+      <nav class="nav">
+        <a href="#onboarding">Onboarding</a>
+        <a href="#terms">Terms</a>
+        <a href="#security">Security</a>
+        <a href="#faq">FAQs</a>
+        <a href="#contact">Contact</a>
+        <a class="btn btn--ghost btn--sm" href="./portal.html">Access Portal</a>
+      </nav>
+    </div>
+  </header>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Plan</th>
-            <th>Minimum Deposit</th>
-            <th>ROI Cycle</th>
-            <th>Management Fee</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Starter</td>
-            <td>$500</td>
-            <td>Bi-weekly</td>
-            <td>0.5% annualized</td>
-          </tr>
-          <tr>
-            <td>Pro</td>
-            <td>$5,000</td>
-            <td>Bi-weekly</td>
-            <td>0.3% annualized</td>
-          </tr>
-          <tr>
-            <td>Elite</td>
-            <td>$25,000</td>
-            <td>Bi-weekly</td>
-            <td>0%</td>
-          </tr>
-        </tbody>
-      </table>
-    </section>
+  <main id="main">
+    <!-- HERO (1) -->
+    <section class="hero">
+      <div class="container hero__grid">
+        <div class="hero__left glass">
+          <p class="eyebrow">Private capital access</p>
+          <h1>Structured onboarding, secure access, and transparent funding.</h1>
+          <p class="lead">
+            Vantage Bridge Investments is designed for investors who value clarity, disciplined processes,
+            and controlled access to an investor portal. Applications are reviewed manually. Approved investors
+            fund their account using cryptocurrency inside the portal.
+          </p>
 
-    <!-- 4. SECURITY & FUNDING -->
-    <section class="card">
-      <h2>Security & funding</h2>
-      <ul>
-        <li>Email-verified investor accounts</li>
-        <li>Authenticator-based 2FA</li>
-        <li>Manual approval before funding</li>
-        <li>Crypto-only funding (BTC & USDT)</li>
-        <li>TX hash verification before activation</li>
-      </ul>
-    </section>
+          <div class="pill-row" aria-label="Key highlights">
+            <span class="pill">Manual approval</span>
+            <span class="pill">Crypto-only funding</span>
+            <span class="pill">Secure investor portal</span>
+          </div>
 
-    <!-- 5. FAQ -->
-    <section class="card">
-      <h2>Frequently asked questions</h2>
+          <div class="cta-row">
+            <a class="btn btn--primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog" target="_blank" rel="noopener">
+              Start Application
+            </a>
+            <a class="btn btn--ghost" href="./portal.html">Access Portal</a>
+          </div>
 
-      <div class="faq-item">
-        <strong>Are returns guaranteed?</strong>
-        <p>No. Returns depend on market performance and are not guaranteed.</p>
-      </div>
+          <p class="fineprint">
+            Important: Investing involves risk, including possible loss of capital. Returns are not guaranteed.
+          </p>
+        </div>
 
-      <div class="faq-item">
-        <strong>When are profits credited?</strong>
-        <p>Profits are calculated and credited every 14 days.</p>
-      </div>
+        <div class="hero__right">
+          <div class="glass stat">
+            <div class="stat__kicker">Profit credits</div>
+            <div class="stat__value">Every 14 days</div>
+            <div class="stat__desc">Bi-weekly ROI credits to your available balance.</div>
+          </div>
 
-      <div class="faq-item">
-        <strong>Can I withdraw anytime?</strong>
-        <p>Withdrawal terms depend on your plan and portfolio conditions.</p>
-      </div>
+          <div class="glass stat">
+            <div class="stat__kicker">Rollover option</div>
+            <div class="stat__value">Optional</div>
+            <div class="stat__desc">Reinvest bi-weekly ROI into principal for compounding.</div>
+          </div>
 
-      <div class="faq-item">
-        <strong>Which cryptocurrencies are accepted?</strong>
-        <p>BTC and USDT (ERC-20).</p>
+          <div class="glass stat">
+            <div class="stat__kicker">Funding methods</div>
+            <div class="stat__value">BTC • USDT</div>
+            <div class="stat__desc">Funding instructions appear after approval (inside portal).</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- 6. CONTACT -->
-    <section class="card">
-      <h2>Contact</h2>
-      <p>
-        Investor inquiries:<br />
-        <strong>vantagebridge.invest@outlook.com</strong>
-      </p>
+    <!-- HOW ONBOARDING WORKS (2) -->
+    <section id="onboarding" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>How onboarding works</h2>
+          <p class="muted">A straightforward process built for verification, security, and clear next steps.</p>
+        </div>
+
+        <div class="grid-4">
+          <article class="glass card">
+            <div class="card__num">1</div>
+            <h3>Apply</h3>
+            <p>Submit an investor application for review.</p>
+          </article>
+
+          <article class="glass card">
+            <div class="card__num">2</div>
+            <h3>Review</h3>
+            <p>Applications are evaluated manually for eligibility and fit.</p>
+          </article>
+
+          <article class="glass card">
+            <div class="card__num">3</div>
+            <h3>Approval</h3>
+            <p>Approved investors receive portal access after email confirmation.</p>
+          </article>
+
+          <article class="glass card">
+            <div class="card__num">4</div>
+            <h3>Fund</h3>
+            <p>Fund your account using crypto inside the investor portal.</p>
+          </article>
+        </div>
+
+        <div class="note glass">
+          <div class="note__title">Tip</div>
+          <div class="note__body">
+            You can submit your application first, then create your portal account. Funding instructions only display after approval.
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- 7. RISK DISCLOSURE -->
-    <footer>
-      <strong>Risk disclosure:</strong><br />
-      Investing involves risk, including possible loss of capital.
-      Past performance does not guarantee future results.
-      This platform does not provide financial advice.
+    <!-- INVESTMENT TERMS (3) -->
+    <section id="terms" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Investment terms</h2>
+          <p class="muted">Returns accrue based on portfolio performance. Profits are credited bi-weekly.</p>
+        </div>
+
+        <div class="glass table-card">
+          <div class="table-card__top">
+            <div>
+              <div class="table-card__title">Tiered entry (example)</div>
+              <div class="table-card__sub">All amounts are examples and may be adjusted.</div>
+            </div>
+            <div class="table-card__badge">Bi-Weekly ROI Cycle</div>
+          </div>
+
+          <div class="table-wrap" role="region" aria-label="Investment tiers table" tabindex="0">
+            <table class="tiers">
+              <thead>
+                <tr>
+                  <th>Plan Level</th>
+                  <th>Minimum Deposit</th>
+                  <th>ROI Cycle</th>
+                  <th>Management Fee</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="tier-name">Starter</span></td>
+                  <td>$500</td>
+                  <td>Bi-Weekly</td>
+                  <td>0.5% (Annualized)</td>
+                </tr>
+                <tr>
+                  <td><span class="tier-name">Pro</span></td>
+                  <td>$5,000</td>
+                  <td>Bi-Weekly</td>
+                  <td>0.3% (Annualized)</td>
+                </tr>
+                <tr>
+                  <td><span class="tier-name">Elite</span></td>
+                  <td>$25,000</td>
+                  <td>Bi-Weekly</td>
+                  <td>0%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="table-card__foot">
+            <div class="muted">
+              Reinvestment: You may choose bi-weekly payout or automatic rollover into principal.
+            </div>
+            <a class="btn btn--sm btn--primary"
+               href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog"
+               target="_blank" rel="noopener">
+              Apply now
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECURITY & FUNDING (4) -->
+    <section id="security" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Security & funding</h2>
+          <p class="muted">Built for secure access, controlled funding, and clear verification.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="glass card">
+            <h3>Security</h3>
+            <ul class="list">
+              <li>Email-verified investor accounts (confirmation required)</li>
+              <li>Authenticator-based 2FA inside the investor portal</li>
+              <li>Session controls and safe sign-in flows</li>
+            </ul>
+          </div>
+
+          <div class="glass card">
+            <h3>Funding</h3>
+            <ul class="list">
+              <li>Manual approval before funding instructions appear</li>
+              <li>Crypto-only funding: BTC & USDT (ERC-20)</li>
+              <li>TX hash submission + “pending confirmation” status in portal (next step)</li>
+            </ul>
+
+            <div class="mini-callout">
+              <div class="mini-callout__title">Funding is done inside the portal</div>
+              <div class="mini-callout__body">
+                Wallet addresses and exact instructions display only for approved users after sign-in.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQs (5) -->
+    <section id="faq" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Frequently asked questions</h2>
+          <p class="muted">Tap a question to expand the answer.</p>
+        </div>
+
+        <div class="glass faq">
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              Are returns guaranteed?
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>No. Returns depend on market performance and are not guaranteed. Investing involves risk, including loss of capital.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              When are profits credited?
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>Profits are calculated and credited every 14 days (bi-weekly), based on portfolio performance.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              Can I withdraw anytime?
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>Withdrawal terms depend on your plan and portfolio conditions. Any credited ROI eligible for withdrawal will be shown in your portal balance.</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              Which cryptocurrencies are accepted?
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>BTC and USDT (ERC-20).</p>
+            </div>
+          </div>
+
+          <div class="faq-item">
+            <button class="faq-q" aria-expanded="false">
+              How do I get approved?
+              <span class="faq-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="faq-a" hidden>
+              <p>Submit the application form. Applications are reviewed manually. Approved investors receive portal access after confirming their email.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT (6) -->
+    <section id="contact" class="section">
+      <div class="container">
+        <div class="section__head">
+          <h2>Contact</h2>
+          <p class="muted">For questions about onboarding, access, or documentation.</p>
+        </div>
+
+        <div class="grid-2">
+          <div class="glass card">
+            <h3>Email</h3>
+            <p class="muted">We respond as quickly as possible.</p>
+            <a class="btn btn--primary" href="mailto:vantagebridge.invest@outlook.com">
+              vantagebridge.invest@outlook.com
+            </a>
+          </div>
+
+          <div class="glass card">
+            <h3>Investor application</h3>
+            <p class="muted">Submit an application for manual review.</p>
+            <a class="btn btn--ghost" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog" target="_blank" rel="noopener">
+              Open application form
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- RISK DISCLOSURE (7) -->
+    <footer class="footer">
+      <div class="container footer__inner glass">
+        <div class="footer__title">Risk disclosure</div>
+        <p class="footer__text">
+          Investing involves risk, including the possible loss of principal. Past performance does not guarantee future results.
+          Any references to ROI are illustrative and depend on market performance and portfolio conditions. This site is for informational purposes only.
+        </p>
+        <div class="footer__bottom">
+          <span>© <span id="year"></span> Vantage Bridge Investments</span>
+          <span class="dot">•</span>
+          <a href="./portal.html">Investor Portal</a>
+        </div>
+      </div>
     </footer>
+  </main>
 
-  </div>
+  <script>
+    // Footer year
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // FAQ accordion
+    document.querySelectorAll('.faq-q').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        // close others
+        document.querySelectorAll('.faq-q').forEach((b) => {
+          b.setAttribute('aria-expanded', 'false');
+          b.querySelector('.faq-icon').textContent = '+';
+          const panel = b.parentElement.querySelector('.faq-a');
+          panel.hidden = true;
+        });
+        // open this if it was closed
+        if (!expanded) {
+          btn.setAttribute('aria-expanded', 'true');
+          btn.querySelector('.faq-icon').textContent = '–';
+          btn.parentElement.querySelector('.faq-a').hidden = false;
+        }
+      });
+    });
+  </script>
 </body>
 </html>
