@@ -4,20 +4,30 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Vantage Bridge Investments — Private Investment Brief</title>
-  <meta name="description" content="Vantage Bridge Investments — portfolio overview, payout cadence, fees, risks, and how to get started." />
+  <meta name="description" content="Vantage Bridge Investments — portfolio overview, bi-weekly profit credits, plan tiers, transparency, and how to start." />
   <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <header class="header">
-    <nav class="nav">
-      <a class="brand" href="#top">VANTAGE BRIDGE</a>
+  <a class="skip-link" href="#main">Skip to content</a>
 
-      <div class="links">
+  <!-- TOP CONFIG: change ONLY this block -->
+  <script>
+    // ✅ Change these three once and you're done:
+    const GOOGLE_FORM_URL = "PASTE_GOOGLE_FORM_LINK_HERE";
+    const WHATSAPP_NUMBER = "PASTE_COUNTRYCODE_NUMBER_HERE"; // example: 2348012345678
+    const CONTACT_EMAIL   = "you@example.com";
+  </script>
+
+  <header class="header">
+    <nav class="nav" aria-label="Primary">
+      <a class="brand" href="#top" aria-label="Vantage Bridge Investments home">VANTAGE BRIDGE</a>
+
+      <div class="links" aria-label="Site sections">
         <a href="#overview">Overview</a>
         <a href="#payouts">Payouts</a>
         <a href="#plans">Plans</a>
-        <a href="#portal">Investor Portal</a>
+        <a href="#dashboard">Dashboard</a>
         <a href="#credibility">Credibility</a>
         <a href="#faq">FAQ</a>
       </div>
@@ -26,43 +36,43 @@
     </nav>
   </header>
 
-  <main id="top" class="main">
+  <main id="main" class="main">
     <!-- HERO -->
-    <section class="hero">
+    <section id="top" class="hero" aria-label="Hero">
       <div class="hero-card">
         <p class="pill">Private investment brief</p>
 
         <h1>Consistent momentum, transparent terms, premium investor experience.</h1>
         <p class="sub">
-          Vantage Bridge Investments provides a clear structure: tiered entry, bi-weekly profit credits,
-          and an investor portal designed for clarity and control.
+          Vantage Bridge Investments offers tiered entry, bi-weekly profit credits (every 14 days),
+          and a clear rollover vs payout choice designed for investor control.
         </p>
 
-        <div class="cta-row">
-          <a class="btn shine" href="#start">Start investing</a>
+        <div class="cta-row" aria-label="Primary actions">
+          <a class="btn primary js-form-link" href="#" target="_blank" rel="noreferrer">Start Investing</a>
           <a class="btn ghost" href="#plans">View plans</a>
         </div>
 
         <p class="small muted">
-          Investing involves risk. Returns are not guaranteed, and losses are possible. Please read the risks and FAQ.
+          Investing involves risk. Returns are not guaranteed, and losses are possible. Please read risks and FAQ.
         </p>
       </div>
 
-      <div class="hero-stats">
+      <div class="hero-stats" aria-label="Key facts">
         <div class="stat">
           <div class="stat-kicker">Minimum entry</div>
           <div class="stat-value">$500</div>
-          <div class="stat-note">starter plan</div>
+          <div class="stat-note">Starter plan</div>
         </div>
         <div class="stat">
           <div class="stat-kicker">Credit frequency</div>
           <div class="stat-value">Every 14 days</div>
-          <div class="stat-note">bi-weekly profit credits</div>
+          <div class="stat-note">Bi-weekly profit credits</div>
         </div>
         <div class="stat">
-          <div class="stat-kicker">Options</div>
+          <div class="stat-kicker">Investor choice</div>
           <div class="stat-value">Payout or Rollover</div>
-          <div class="stat-note">withdraw or compound</div>
+          <div class="stat-note">Withdraw or compound</div>
         </div>
       </div>
     </section>
@@ -75,30 +85,31 @@
         <article class="card">
           <h3>What this is</h3>
           <p>
-            A private investment structure offering curated portfolio participation with defined reporting and payout cadence.
-            You select a plan tier and receive periodic profit credits based on portfolio performance.
+            A private investment structure offering curated portfolio participation with defined payout cadence.
+            You choose a plan tier and receive periodic profit credits based on the performance of your selected portfolio.
           </p>
         </article>
 
         <article class="card">
           <h3>Core principle</h3>
           <p>
-            Clarity over hype. Terms are stated upfront, performance is tracked, and credits are issued on a consistent schedule.
+            Clarity over hype. Terms are stated upfront, credits follow a consistent schedule, and options are simple:
+            rollover to compound or payout to withdraw eligible credited ROI.
           </p>
         </article>
 
         <article class="card">
           <h3>Who it’s for</h3>
           <p>
-            For investors comfortable with market risk who want structure, visibility, and a clean process from start to finish.
+            For investors comfortable with market risk who want structure, visibility, and a clean, premium process from start to finish.
           </p>
         </article>
       </div>
 
       <blockquote class="quote">
         “At Vantage Bridge, we believe in consistent momentum. Once you activate your account with a minimum of $500,
-        our strategies begin working within the defined portfolio framework. We credit earned ROI every two weeks,
-        giving you faster access to profits and greater control over your financial journey.”
+        our automated strategies begin working immediately. Unlike traditional firms that make you wait a quarter or a year to see results,
+        we credit your earned ROI every two weeks, giving you faster access to your profits and greater control over your financial journey.”
         <span class="quote-attrib">— Vantage Bridge Investments</span>
       </blockquote>
     </section>
@@ -125,28 +136,31 @@
 
       <div class="two">
         <div class="card">
-          <h3>Rollover (compounding)</h3>
+          <h3>Rollover (compounding option)</h3>
           <p>
-            You can choose to automatically <strong>roll over</strong> your bi-weekly credits into principal to accelerate compounding.
+            Choose to automatically roll over your bi-weekly ROI credit into principal to accelerate compounding.
           </p>
         </div>
 
         <div class="card">
-          <h3>Payout (withdrawal)</h3>
+          <h3>Payout (withdrawal option)</h3>
           <p>
-            Alternatively, set credits to <strong>payout</strong> so your bi-weekly ROI becomes available for withdrawal as it’s credited.
+            Choose payout so your bi-weekly ROI credit becomes available for withdrawal when credited (subject to terms).
           </p>
         </div>
       </div>
 
       <div class="card warn">
-        <h3>Risk disclosure</h3>
+        <h3>Risks (read this)</h3>
         <ul>
           <li><strong>No guarantees:</strong> ROI credits depend on portfolio performance.</li>
-          <li><strong>Capital risk:</strong> you may lose some or all of principal.</li>
-          <li><strong>Volatility & liquidity:</strong> timing/availability may vary based on terms and market conditions.</li>
+          <li><strong>Capital risk:</strong> you can lose some or all of your investment.</li>
+          <li><strong>Volatility:</strong> markets can move unpredictably.</li>
+          <li><strong>Liquidity:</strong> timing/availability can be subject to the agreed terms and operational processing.</li>
         </ul>
-        <p class="small muted">Only invest what you can afford to lose. This site is informational, not financial advice.</p>
+        <p class="small muted">
+          This website is informational and not financial advice. Only invest what you can afford to lose.
+        </p>
       </div>
     </section>
 
@@ -154,11 +168,11 @@
     <section id="plans" class="section">
       <h2>Tiered entry</h2>
       <p class="muted">
-        Below is the plan structure. Profit credits are bi-weekly; fees are shown as annualized management fees.
+        Profit credits are issued bi-weekly; fees below are shown as annualized management fees.
       </p>
 
       <div class="card table-card">
-        <div class="table-wrap">
+        <div class="table-wrap" role="region" aria-label="Plan tiers table" tabindex="0">
           <table class="plans">
             <thead>
               <tr>
@@ -192,38 +206,89 @@
         </div>
 
         <p class="small muted">
-          Note: plan terms and availability may change. Confirm current terms when submitting the Start Investing form.
+          Note: plan terms and availability may change. Confirm current terms during onboarding after you submit the form.
         </p>
       </div>
     </section>
 
-    <!-- PORTAL -->
-    <section id="portal" class="section alt">
-      <h2>Investor portal (dashboard experience)</h2>
+    <!-- DASHBOARD PREVIEW -->
+    <section id="dashboard" class="section alt">
+      <h2>Investor dashboard preview</h2>
+      <p class="muted">
+        A modular, widget-based layout designed for clarity — performance snapshots, payout cadence,
+        and portfolio visibility. (Public site is informational; portal access is provided after onboarding where applicable.)
+      </p>
 
-      <div class="grid">
-        <article class="card">
-          <h3>Real-time tracking</h3>
-          <p>
-            View performance visuals and portfolio movement summaries in the investor portal.
-          </p>
-          <p class="small muted">Shown in portal where applicable; public site is informational only.</p>
-        </article>
+      <div class="widgets" role="region" aria-label="Dashboard preview widgets">
+        <div class="card widget" role="group" aria-label="Available balance widget">
+          <div class="kpi">
+            <div>
+              <div class="label">Available balance</div>
+              <div class="value">$—</div>
+            </div>
+            <div class="muted small">Status: active</div>
+          </div>
+          <div class="meter" aria-hidden="true"><span></span></div>
+          <p class="small muted">Bi-weekly credits appear here when posted.</p>
+        </div>
 
-        <article class="card">
-          <h3>Next payout countdown</h3>
-          <p>
-            A countdown indicator highlights when your next bi-weekly ROI credit is scheduled.
+        <div class="card widget" role="group" aria-label="Next payout countdown widget">
+          <div class="kpi">
+            <div>
+              <div class="label">Next ROI credit</div>
+              <div class="value">14 days</div>
+            </div>
+            <div class="muted small">Cycle-based</div>
+          </div>
+          <p class="small muted">
+            Profit credits are posted every 14 days, based on portfolio performance during the cycle.
           </p>
-          <p class="small muted">Timing is based on cycle rules and operational processing.</p>
-        </article>
+        </div>
 
-        <article class="card">
-          <h3>Liquidity of credited ROI</h3>
-          <p>
-            While principal remains active, ROI credited every 14 days becomes eligible for withdrawal (based on terms).
+        <div class="card widget" role="group" aria-label="Rollover or payout choice widget">
+          <div class="kpi">
+            <div>
+              <div class="label">Preference</div>
+              <div class="value">Rollover / Payout</div>
+            </div>
+          </div>
+          <p class="small muted">
+            Choose compounding (rollover) or withdrawal-eligible payout for each credited cycle.
           </p>
-        </article>
+        </div>
+
+        <div class="card widget wide" role="group" aria-label="Portfolio visibility widget">
+          <h3>Portfolio visibility</h3>
+          <p class="muted">
+            Investors receive structured summaries on the agreed schedule, focused on transparency and clarity.
+          </p>
+          <ul>
+            <li>Performance summary (wins/losses where appropriate)</li>
+            <li>Risk notes + exposure overview</li>
+            <li>Cycle confirmation and credited ROI log</li>
+          </ul>
+        </div>
+
+        <div class="card widget wide" role="group" aria-label="Security and transparency widget">
+          <h3>Security & transparency</h3>
+          <ul>
+            <li>Clear confirmations for contributions and credits</li>
+            <li>Defined reporting cadence and communication channel</li>
+            <li>No “guaranteed return” claims — risks stated upfront</li>
+          </ul>
+        </div>
+
+        <div class="card widget full" role="group" aria-label="Start investing widget">
+          <h3>Start investing</h3>
+          <p class="muted">
+            Submit the form to receive current terms and onboarding instructions.
+          </p>
+          <div class="cta-row">
+            <a class="btn primary js-form-link" href="#" target="_blank" rel="noreferrer">Start Investing (Google Form)</a>
+            <a class="btn ghost" href="#contact">Contact first</a>
+          </div>
+          <p class="small muted">Participation is private and confirmation-based.</p>
+        </div>
       </div>
     </section>
 
@@ -235,40 +300,41 @@
         <article class="card">
           <h3>Defined workflow</h3>
           <p>
-            A structured process from onboarding → confirmation → cycle reporting → credits (rollover or payout).
+            Structured onboarding → confirmation → cycle reporting → bi-weekly credits → rollover or payout choice.
+            No confusion, no clutter.
           </p>
         </article>
 
         <article class="card">
           <h3>Clear records</h3>
           <p>
-            Contributions and credit events are acknowledged and tracked. You can request your history at any time.
+            Contributions and credit events are acknowledged and tracked. You can request a history summary at any time.
           </p>
         </article>
 
         <article class="card">
           <h3>Communication standard</h3>
           <p>
-            A direct contact channel for questions and confirmations, with reasonable response-time expectations.
+            Direct channel support for confirmations and questions, with reasonable response expectations.
           </p>
         </article>
       </div>
 
       <div class="two">
         <article class="card">
-          <h3>Investor reporting</h3>
+          <h3>Reporting focus</h3>
           <ul>
-            <li>Profit credits every 14 days (performance-based)</li>
-            <li>Portfolio and account summaries on a defined schedule</li>
-            <li>Clear rollover vs payout choice</li>
+            <li>Bi-weekly credit schedule (performance-based)</li>
+            <li>Portfolio/account summaries (as agreed)</li>
+            <li>Clear rollover vs payout preference</li>
           </ul>
         </article>
 
         <article class="card">
           <h3>Professional clarity</h3>
           <ul>
-            <li>No “guaranteed” language</li>
             <li>Risks disclosed upfront</li>
+            <li>Targets and terms stated carefully</li>
             <li>Private participation with confirmation</li>
           </ul>
         </article>
@@ -282,12 +348,10 @@
       <div class="card start">
         <h3>Submit your interest (Google Form)</h3>
         <p class="muted">
-          Tap below to open the form. Once submitted, you’ll be contacted with the current terms and next steps.
+          Tap below to open the form. Once submitted, you’ll be contacted with current terms and next steps.
         </p>
         <div class="cta-row">
-          <a class="btn shine" href="PASTE_YOUR_GOOGLE_FORM_LINK_HERE" target="_blank" rel="noreferrer">
-            Start Investing
-          </a>
+          <a class="btn primary js-form-link" href="#" target="_blank" rel="noreferrer">Start Investing</a>
           <a class="btn ghost" href="#contact">Contact first</a>
         </div>
         <p class="small muted">
@@ -313,12 +377,12 @@
 
         <details>
           <summary>Can I compound instead of withdrawing?</summary>
-          <p>Yes. You can set credits to “rollover” to compound, or “payout” to withdraw eligible credited ROI.</p>
+          <p>Yes. Set credits to “rollover” to compound, or “payout” to withdraw eligible credited ROI (subject to terms).</p>
         </details>
 
         <details>
           <summary>What happens to my principal?</summary>
-          <p>Your principal remains active within the portfolio framework. Details and any liquidity rules are confirmed during onboarding.</p>
+          <p>Your principal remains active within the selected portfolio framework. Any liquidity rules are confirmed during onboarding.</p>
         </details>
       </div>
 
@@ -335,13 +399,13 @@
     <section id="contact" class="section">
       <h2>Contact</h2>
       <div class="card">
-        <p class="muted">Add your preferred contact methods:</p>
+        <p class="muted">Choose the fastest way to reach us:</p>
         <div class="cta-row">
-          <a class="btn" href="https://wa.me/XXXXXXXXXXX" target="_blank" rel="noreferrer">WhatsApp</a>
-          <a class="btn ghost" href="mailto:you@example.com">Email</a>
+          <a class="btn js-wa-link" href="#" target="_blank" rel="noreferrer">WhatsApp</a>
+          <a class="btn ghost js-email-link" href="#">Email</a>
         </div>
         <p class="small muted">
-          Replace WhatsApp + email with yours. WhatsApp format: country code + number, no spaces.
+          WhatsApp format: country code + number (no spaces). Email opens your mail app automatically.
         </p>
       </div>
     </section>
@@ -352,7 +416,18 @@
   </footer>
 
   <script>
+    // Set year
     document.getElementById("year").textContent = new Date().getFullYear();
+
+    // Wire up links from the top config (so you only change once)
+    const formLinks = document.querySelectorAll(".js-form-link");
+    formLinks.forEach(a => a.href = GOOGLE_FORM_URL);
+
+    const wa = document.querySelector(".js-wa-link");
+    if (wa) wa.href = "https://wa.me/" + WHATSAPP_NUMBER;
+
+    const em = document.querySelector(".js-email-link");
+    if (em) em.href = "mailto:" + CONTACT_EMAIL;
   </script>
 </body>
 </html>
