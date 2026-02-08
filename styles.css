@@ -234,4 +234,47 @@ details p{margin:10px 0 0; color:var(--muted)}
   .hero-stats{grid-template-columns: 1fr}
   .links{display:none}
   .nav{justify-content:space-between}
+}/* Luxury content extras */
+.quote{
+  margin: 16px 0 0;
+  padding: 16px 16px;
+  border-radius: 18px;
+  border: 1px solid rgba(212,175,55,.35);
+  background:
+    radial-gradient(700px 420px at 20% 0%, rgba(212,175,55,.14), transparent 60%),
+    rgba(255,255,255,.05);
+  color: var(--text);
+}
+.quote-attrib{
+  display:block;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: .95rem;
+}
+
+.table-card{padding: 14px}
+.table-wrap{overflow:auto; -webkit-overflow-scrolling: touch}
+
+table.plans{
+  width:100%;
+  border-collapse: collapse;
+  min-width: 640px;
+}
+table.plans th, table.plans td{
+  text-align:left;
+  padding: 12px 12px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+  vertical-align: top;
+}
+table.plans thead th{
+  color: var(--muted);
+  font-weight: 800;
+  letter-spacing: .2px;
+}
+table.plans tbody tr:hover{
+  background: rgba(255,255,255,.04);
+}
+
+@media (max-width: 900px){
+  table.plans{min-width: 680px;}
 }
