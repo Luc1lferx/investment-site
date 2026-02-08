@@ -1,152 +1,301 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Vantage Bridge – Investor Portal</title>
-
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Vantage Bridge — Investor Access</title>
+  <meta name="color-scheme" content="dark light" />
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body {
-      margin: 0;
-      min-height: 100vh;
-      background: linear-gradient(135deg, #020617, #0b1a3a);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #fff;
-      padding: 24px;
+    :root{
+      --bg1:#081226; --bg2:#0b1b3f;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.16);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.65);
+      --accent:#2f7bff;
+      --danger:#ff4d4d;
+      --ok:#30d158;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 22px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
     }
-    .card {
-      width: 100%;
-      max-width: 420px;
-      padding: 32px;
-      border-radius: 24px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(20px);
-      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(47,123,255,.20), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(120,90,255,.14), transparent 55%),
+        radial-gradient(900px 700px at 50% 90%, rgba(47,255,214,.06), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:28px 16px;
     }
-    h1 { text-align:center; margin:0 0 6px; font-weight:800; }
-    p { text-align:center; opacity:.8; margin:0 0 22px; font-size:14px; }
-    input {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 14px;
-      border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.10);
-      color: #fff;
-      font-size: 15px;
-      outline: none;
+    .card{
+      width:min(560px, 100%);
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding:26px;
     }
-    input::placeholder { color: rgba(255,255,255,0.65); }
-    button {
-      width: 100%;
-      padding: 14px;
-      border-radius: 14px;
-      border: none;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 10px;
-      font-weight: 700;
+    .brand{
+      text-align:center;
+      padding:8px 8px 18px;
     }
-    .primary { background:#3b82f6; color:#fff; }
-    .secondary { background:transparent; border:1px solid rgba(255,255,255,0.3); color:#fff; }
-    .status { margin-top: 18px; text-align:center; font-size:14px; opacity:.92; min-height:18px; word-break:break-word; }
-    .tiny { margin-top:10px; text-align:center; font-size:12px; opacity:.7; }
+    .brand h1{
+      margin:0;
+      letter-spacing:.3px;
+      font-size:42px;
+      line-height:1.1;
+      font-weight:800;
+    }
+    .brand p{
+      margin:10px 0 0;
+      color:var(--muted);
+      font-size:15px;
+      letter-spacing:.2px;
+    }
+    .field{
+      margin-top:14px;
+    }
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin:0 0 8px 2px;
+      letter-spacing:.25px;
+    }
+    input{
+      width:100%;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.07);
+      padding:14px 14px;
+      font-size:16px;
+      color:var(--text);
+      outline:none;
+    }
+    input:focus{
+      border-color: rgba(47,123,255,.75);
+      box-shadow: 0 0 0 4px rgba(47,123,255,.18);
+    }
+    .row{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top:16px;
+    }
+    .btn{
+      flex:1;
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:18px;
+      padding:14px 14px;
+      font-weight:700;
+      font-size:16px;
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      cursor:pointer;
+      transition: transform .06s ease, background .15s ease, opacity .15s ease;
+    }
+    .btn:active{ transform: translateY(1px); }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(47,123,255,.92), rgba(47,123,255,.72));
+      border-color: rgba(47,123,255,.95);
+    }
+    .btn:disabled{ opacity:.55; cursor:not-allowed; }
+    .note{
+      margin-top:14px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.5;
+      text-align:center;
+    }
+    .status{
+      margin-top:14px;
+      padding:12px 12px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      color:var(--muted);
+      font-size:13px;
+      min-height:44px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+    }
+    .status.ok{ color:rgba(48,209,88,.95); border-color: rgba(48,209,88,.25); }
+    .status.err{ color:rgba(255,77,77,.95); border-color: rgba(255,77,77,.25); }
+    .mini{
+      margin-top:10px;
+      display:flex;
+      justify-content:center;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .link{
+      appearance:none;
+      border:0;
+      background:transparent;
+      color: rgba(47,123,255,.95);
+      cursor:pointer;
+      font-weight:650;
+      font-size:13px;
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
+  <main class="card">
+    <div class="brand">
+      <h1>Vantage Bridge</h1>
+      <p>Secure investor access portal</p>
+    </div>
 
-  <div class="card">
-    <h1>Vantage Bridge</h1>
-    <p>Secure investor access portal</p>
+    <div class="field">
+      <label>Email</label>
+      <input id="email" type="email" autocomplete="email" placeholder="name@email.com" />
+    </div>
 
-    <input id="email" type="email" placeholder="Email address" autocomplete="email" />
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+    <div class="field">
+      <label>Password</label>
+      <input id="password" type="password" autocomplete="current-password" placeholder="••••••••" />
+    </div>
 
-    <button class="primary" id="btnCreate">Create account</button>
-    <button class="secondary" id="btnSignIn">Sign in</button>
+    <div class="row">
+      <button id="signupBtn" class="btn primary">Create account</button>
+      <button id="loginBtn" class="btn">Sign in</button>
+    </div>
 
-    <div class="status" id="status">Ready</div>
-    <div class="tiny">After signup, confirm your email, then sign in.</div>
-  </div>
+    <div class="mini">
+      <button id="resetBtn" class="link">Forgot password?</button>
+      <button id="goDashBtn" class="link">Go to dashboard</button>
+    </div>
 
-<script>
-  const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
-  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
+    <div id="status" class="status">Ready.</div>
 
-  const SITE_URL = "https://luc1lferx.github.io";
-  const DASHBOARD_URL = SITE_URL + "/dashboard.html";
+    <div class="note">
+      Tip: After creating an account, check your email and confirm the signup before logging in.
+    </div>
+  </main>
 
-  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  <script type="module">
+    import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
-  const statusEl = document.getElementById("status");
-  const btnCreate = document.getElementById("btnCreate");
-  const btnSignIn = document.getElementById("btnSignIn");
+    // ✅ Your Supabase project details
+    const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
 
-  function setStatus(t){ statusEl.textContent = t || ""; }
-  function lock(v){ btnCreate.disabled = v; btnSignIn.disabled = v; }
+    // ✅ Your GitHub Pages URL (this is what matters)
+    const APP_BASE = "https://luc1lferx.github.io/investment-site";
 
-  // If user is already signed in, go straight to dashboard
-  (async () => {
-    const { data } = await supabaseClient.auth.getSession();
-    if (data?.session) window.location.href = DASHBOARD_URL;
-  })();
+    const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  btnCreate.addEventListener("click", async () => {
-    setStatus("Creating account…");
-    lock(true);
+    const el = (id) => document.getElementById(id);
+    const statusEl = el("status");
+    const signupBtn = el("signupBtn");
+    const loginBtn  = el("loginBtn");
+    const resetBtn  = el("resetBtn");
+    const goDashBtn = el("goDashBtn");
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    if(!email || !password){
-      setStatus("Please enter email + password.");
-      lock(false);
-      return;
+    function setStatus(msg, type="") {
+      statusEl.className = "status" + (type ? " " + type : "");
+      statusEl.textContent = msg;
+    }
+    function lockButtons(locked) {
+      signupBtn.disabled = locked;
+      loginBtn.disabled  = locked;
+      resetBtn.disabled  = locked;
+      goDashBtn.disabled = locked;
+    }
+    function getCreds() {
+      const email = el("email").value.trim();
+      const password = el("password").value;
+      return { email, password };
+    }
+    function goDashboard() {
+      window.location.href = APP_BASE + "/dashboard.html";
     }
 
-    const { error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        // ✅ Forces the email-confirm link to come back to your GitHub site
-        emailRedirectTo: SITE_URL
-      }
+    // If already signed in, go straight to dashboard
+    (async () => {
+      try {
+        const { data } = await supabase.auth.getSession();
+        if (data?.session) goDashboard();
+      } catch {}
+    })();
+
+    signupBtn.addEventListener("click", async () => {
+      const { email, password } = getCreds();
+      if (!email || !password) return setStatus("Enter email + password.", "err");
+
+      lockButtons(true);
+      setStatus("Creating your account…");
+
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          // ✅ forces confirmation link to return to your real website (not localhost)
+          emailRedirectTo: APP_BASE
+        }
+      });
+
+      lockButtons(false);
+
+      if (error) return setStatus(error.message, "err");
+      setStatus("Account created. Check your email to confirm.", "ok");
     });
 
-    setStatus(error ? error.message : "Account created. Check your email to confirm.");
-    lock(false);
-  });
+    loginBtn.addEventListener("click", async () => {
+      const { email, password } = getCreds();
+      if (!email || !password) return setStatus("Enter email + password.", "err");
 
-  btnSignIn.addEventListener("click", async () => {
-    setStatus("Signing in…");
-    lock(true);
+      lockButtons(true);
+      setStatus("Signing you in…");
 
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
 
-    if(!email || !password){
-      setStatus("Please enter email + password.");
-      lock(false);
-      return;
-    }
+      lockButtons(false);
 
-    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+      if (error) return setStatus(error.message, "err");
+      if (!data?.session) return setStatus("Signed in, but session missing. Try again.", "err");
 
-    if(error){
-      setStatus(error.message);
-      lock(false);
-      return;
-    }
+      setStatus("Signed in. Redirecting…", "ok");
+      goDashboard();
+    });
 
-    // ✅ Success → go to dashboard
-    window.location.href = DASHBOARD_URL;
-  });
-</script>
+    resetBtn.addEventListener("click", async () => {
+      const email = el("email").value.trim();
+      if (!email) return setStatus("Enter your email first.", "err");
 
+      lockButtons(true);
+      setStatus("Sending password reset email…");
+
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: APP_BASE
+      });
+
+      lockButtons(false);
+
+      if (error) return setStatus(error.message, "err");
+      setStatus("Password reset email sent (check inbox/spam).", "ok");
+    });
+
+    goDashBtn.addEventListener("click", async () => {
+      setStatus("Checking session…");
+      const { data } = await supabase.auth.getSession();
+      if (!data?.session) return setStatus("You’re not signed in yet.", "err");
+      goDashboard();
+    });
+  </script>
 </body>
 </html>
