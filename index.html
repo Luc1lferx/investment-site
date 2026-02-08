@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vantage Bridge Investments</title>
 
-  <!-- Supabase JS -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- Supabase JS (reliable) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <style>
     body {
@@ -18,65 +18,73 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      padding: 24px;
+      box-sizing: border-box;
     }
 
     .glass {
       background: rgba(255, 255, 255, 0.08);
       backdrop-filter: blur(22px);
       border-radius: 18px;
-      padding: 32px;
+      padding: 28px;
       width: 100%;
       max-width: 420px;
       box-shadow: 0 30px 80px rgba(0,0,0,0.5);
     }
 
-    h1 {
-      text-align: center;
-      margin-bottom: 8px;
-      font-weight: 600;
-    }
-
-    p {
-      text-align: center;
-      opacity: 0.75;
-      margin-bottom: 24px;
-      font-size: 14px;
-    }
+    h1 { text-align: center; margin: 0 0 8px; font-weight: 700; }
+    p { text-align: center; opacity: 0.75; margin: 0 0 18px; font-size: 14px; }
 
     input {
       width: 100%;
       padding: 14px;
-      margin-bottom: 14px;
+      margin-top: 12px;
       border-radius: 12px;
-      border: none;
+      border: 1px solid rgba(255,255,255,0.18);
       background: rgba(255,255,255,0.12);
       color: white;
       font-size: 15px;
+      box-sizing: border-box;
     }
 
     button {
       width: 100%;
       padding: 14px;
+      margin-top: 12px;
       border-radius: 12px;
       border: none;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       background: linear-gradient(135deg, #288cfa, #4aa3ff);
       color: white;
       cursor: pointer;
-      margin-bottom: 10px;
     }
 
     button.secondary {
       background: transparent;
       border: 1px solid rgba(255,255,255,0.25);
+      font-weight: 600;
+    }
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
     }
 
     .msg {
       text-align: center;
-      margin-top: 12px;
+      margin-top: 14px;
       font-size: 14px;
       min-height: 18px;
+      opacity: 0.9;
+      word-break: break-word;
+    }
+
+    .small {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 12px;
+      opacity: 0.6;
     }
   </style>
 </head>
@@ -86,47 +94,89 @@
     <h1>Vantage Bridge</h1>
     <p>Secure investor access portal</p>
 
-    <input id="email" type="email" placeholder="Email address" />
-    <input id="password" type="password" placeholder="Password" />
+    <input id="email" type="email" placeholder="Email address" autocomplete="email" />
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
 
-    <button onclick="signUp()">Create account</button>
-    <button class="secondary" onclick="signIn()">Sign in</button>
+    <button id="btnCreate" disabled>Create account</button>
+    <button id="btnSignIn" class="secondary" disabled>Sign in</button>
 
     <div class="msg" id="msg"></div>
+    <div class="small" id="status"></div>
   </div>
 
   <script>
-    const supabaseUrl = "https://vnvfbturajffvtcsjalk.supabase.co";
-    const supabaseKey =
+    // ✅ Your keys (already set)
+    const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
+    const SUPABASE_ANON =
       "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
 
-    const supabase = supabaseJs.createClient(supabaseUrl, supabaseKey);
+    const msgEl = document.getElementById("msg");
+    const statusEl = document.getElementById("status");
+    const btnCreate = document.getElementById("btnCreate");
+    const btnSignIn = document.getElementById("btnSignIn");
 
-    async function signUp() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+    function setMsg(t) { msgEl.textContent = t || ""; }
+    function setStatus(t) { statusEl.textContent = t || ""; }
 
-      const { error } = await supabase.auth.signUp({
-        email,
-        password
+    // Wait until the external script loads
+    function initWhenReady() {
+      if (!window.supabaseJs || !window.supabaseJs.createClient) {
+        setStatus("Loading secure login…");
+        return setTimeout(initWhenReady, 250);
+      }
+
+      const supabase = window.supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+      btnCreate.disabled = false;
+      btnSignIn.disabled = false;
+      setStatus("Ready ✅");
+
+      btnCreate.addEventListener("click", async () => {
+        setMsg("");
+        btnCreate.disabled = true;
+        btnSignIn.disabled = true;
+
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
+
+        if (!email || !password) {
+          setMsg("Please enter email + password.");
+          btnCreate.disabled = false;
+          btnSignIn.disabled = false;
+          return;
+        }
+
+        const { error } = await supabase.auth.signUp({ email, password });
+
+        setMsg(error ? error.message : "Account created. Check your email to confirm.");
+        btnCreate.disabled = false;
+        btnSignIn.disabled = false;
       });
 
-      document.getElementById("msg").innerText =
-        error ? error.message : "Check your email to confirm your account.";
-    }
+      btnSignIn.addEventListener("click", async () => {
+        setMsg("");
+        btnCreate.disabled = true;
+        btnSignIn.disabled = true;
 
-    async function signIn() {
-      const email = document.getElementById("email").value;
-      const password = document.getElementById("password").value;
+        const email = document.getElementById("email").value.trim();
+        const password = document.getElementById("password").value;
 
-      const { error } = await supabase.auth.signInWithPassword({
-        email,
-        password
+        if (!email || !password) {
+          setMsg("Please enter email + password.");
+          btnCreate.disabled = false;
+          btnSignIn.disabled = false;
+          return;
+        }
+
+        const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+        setMsg(error ? error.message : "Signed in ✅ (dashboard comes next)");
+        btnCreate.disabled = false;
+        btnSignIn.disabled = false;
       });
-
-      document.getElementById("msg").innerText =
-        error ? error.message : "Signed in successfully.";
     }
+
+    initWhenReady();
   </script>
 
 </body>
