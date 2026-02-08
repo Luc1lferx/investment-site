@@ -2,179 +2,138 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Vantage Bridge</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Vantage Bridge – Investor Portal</title>
+
+  <!-- Supabase CDN -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif; }
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: linear-gradient(135deg, #0b1633, #0f244f);
       min-height: 100vh;
+      background: linear-gradient(135deg, #020617, #0b1a3a);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #fff;
-      padding: 24px;
-      box-sizing: border-box;
     }
-
     .card {
       width: 100%;
       max-width: 420px;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(18px);
-      border-radius: 24px;
       padding: 32px;
-      box-shadow: 0 30px 80px rgba(0,0,0,.4);
+      border-radius: 24px;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
-
     h1 {
       text-align: center;
-      margin: 0 0 6px;
-      font-weight: 800;
-      letter-spacing: 0.2px;
+      margin-bottom: 6px;
     }
-
     p {
       text-align: center;
-      opacity: .8;
-      margin: 0 0 22px;
-      font-size: 14px;
+      opacity: 0.8;
+      margin-bottom: 28px;
     }
-
     input {
       width: 100%;
       padding: 14px;
       margin-bottom: 14px;
       border-radius: 14px;
-      border: 1px solid rgba(255,255,255,0.15);
-      background: rgba(255,255,255,0.10);
-      color: #fff;
-      font-size: 16px;
-      box-sizing: border-box;
+      border: none;
       outline: none;
+      background: rgba(255,255,255,0.15);
+      color: #fff;
+      font-size: 15px;
     }
-
-    input::placeholder {
-      color: rgba(255,255,255,0.65);
-    }
-
     button {
       width: 100%;
       padding: 14px;
       border-radius: 14px;
+      border: none;
       font-size: 16px;
       cursor: pointer;
-      border: none;
-      font-weight: 700;
+      margin-top: 10px;
     }
-
     .primary {
-      background: #2f7cf6;
-      color: #fff;
-      margin-bottom: 10px;
+      background: #3b82f6;
+      color: white;
     }
-
     .secondary {
       background: transparent;
-      border: 1px solid rgba(255,255,255,.35);
-      color: #fff;
+      border: 1px solid rgba(255,255,255,0.3);
+      color: white;
     }
-
-    button:disabled {
-      opacity: 0.65;
-      cursor: not-allowed;
-    }
-
     .status {
-      margin-top: 16px;
+      margin-top: 18px;
       text-align: center;
       font-size: 14px;
-      opacity: .9;
-      min-height: 18px;
-      word-break: break-word;
+      opacity: 0.9;
     }
   </style>
 </head>
-
 <body>
+
   <div class="card">
     <h1>Vantage Bridge</h1>
     <p>Secure investor access portal</p>
 
-    <input id="email" type="email" placeholder="Email address" autocomplete="email" />
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
+    <input id="email" type="email" placeholder="Email address" />
+    <input id="password" type="password" placeholder="Password" />
 
-    <button id="signup" class="primary">Create account</button>
-    <button id="login" class="secondary">Sign in</button>
+    <button class="primary" onclick="signUp()">Create account</button>
+    <button class="secondary" onclick="signIn()">Sign in</button>
 
-    <div id="status" class="status">Ready</div>
+    <div class="status" id="status">Ready</div>
   </div>
 
-  <!-- Supabase CDN -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
+<script>
+  const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
 
-  <!-- App logic -->
-  <script>
-    const statusEl = document.getElementById("status");
-    const signupBtn = document.getElementById("signup");
-    const loginBtn = document.getElementById("login");
+  const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    function setStatus(msg) {
-      statusEl.textContent = msg || "";
-    }
+  const statusEl = document.getElementById("status");
 
-    function lockButtons(isLocked) {
-      signupBtn.disabled = isLocked;
-      loginBtn.disabled = isLocked;
-    }
+  async function signUp() {
+    statusEl.innerText = "Creating account...";
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-    // Supabase client
-    const supabaseClient = supabase.createClient(
-      "https://vnvfbturajffvtcsjalk.supabase.co",
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ"
-    );
-
-    // Sign up
-    signupBtn.addEventListener("click", async () => {
-      setStatus("Creating account…");
-      lockButtons(true);
-
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
-
-      if (!email || !password) {
-        setStatus("Please enter email + password.");
-        lockButtons(false);
-        return;
+    const { error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: "https://luc1lferx.github.io"
       }
-
-      const { error } = await supabaseClient.auth.signUp({ email, password });
-
-      setStatus(error ? error.message : "Account created. Check your email to confirm.");
-      lockButtons(false);
     });
 
-    // Sign in
-    loginBtn.addEventListener("click", async () => {
-      setStatus("Signing in…");
-      lockButtons(true);
+    if (error) {
+      statusEl.innerText = error.message;
+    } else {
+      statusEl.innerText = "Account created. Check your email to confirm.";
+    }
+  }
 
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value;
+  async function signIn() {
+    statusEl.innerText = "Signing in...";
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
 
-      if (!email || !password) {
-        setStatus("Please enter email + password.");
-        lockButtons(false);
-        return;
-      }
-
-      const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
-      setStatus(error ? error.message : "Signed in successfully ✅");
-      lockButtons(false);
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password
     });
-  </script>
+
+    if (error) {
+      statusEl.innerText = error.message;
+    } else {
+      statusEl.innerText = "Signed in successfully.";
+    }
+  }
+</script>
+
 </body>
 </html>
