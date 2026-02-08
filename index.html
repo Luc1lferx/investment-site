@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vantage Bridge Investments</title>
+  <meta name="description" content="Vantage Bridge Investments — private capital access, disciplined portfolio strategy, and secure investor onboarding." />
+  <style>
+    :root{
+      --bg1:#070f22; --bg2:#0b1b3f;
+      --glass: rgba(255,255,255,.08);
+      --glass2: rgba(255,255,255,.06);
+      --stroke: rgba(255,255,255,.16);
+      --text: rgba(255,255,255,.92);
+      --muted: rgba(255,255,255,.66);
+      --accent:#2f7bff;
+      --accent2:#1ed6a6;
+      --shadow: 0 18px 60px rgba(0,0,0,.55);
+      --radius: 22px;
+      --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      min-height:100vh;
+      font-family:var(--font);
+      color:var(--text);
+      background:
+        radial-gradient(1200px 900px at 20% 10%, rgba(47,123,255,.22), transparent 60%),
+        radial-gradient(900px 700px at 80% 20%, rgba(120,90,255,.16), transparent 55%),
+        radial-gradient(900px 700px at 50% 90%, rgba(30,214,166,.08), transparent 55%),
+        linear-gradient(160deg, var(--bg1), var(--bg2));
+      padding:20px 14px 48px;
+    }
+    a{color:inherit}
+    .wrap{ width:min(1100px, 100%); margin:0 auto; }
+    .nav{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:12px 6px; margin-bottom:10px;
+    }
+    .logo{
+      font-weight:900; letter-spacing:.6px;
+      display:flex; gap:10px; align-items:center;
+    }
+    .dot{
+      width:12px; height:12px; border-radius:999px;
+      background: linear-gradient(180deg, rgba(47,123,255,.95), rgba(30,214,166,.75));
+      box-shadow: 0 0 0 6px rgba(47,123,255,.10);
+    }
+    .nav .links{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end}
+    .btn{
+      border:1px solid rgba(255,255,255,.16);
+      border-radius:16px;
+      padding:10px 14px;
+      font-weight:800;
+      font-size:14px;
+      background: rgba(255,255,255,.06);
+      color:var(--text);
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      cursor:pointer;
+    }
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(47,123,255,.92), rgba(47,123,255,.72));
+      border-color: rgba(47,123,255,.95);
+    }
+    .btn.ghost{ background: rgba(255,255,255,.04); }
+    .hero{
+      display:grid;
+      gap:14px;
+      grid-template-columns: 1fr;
+      margin-top:10px;
+    }
+    @media(min-width:900px){
+      .hero{ grid-template-columns: 1.1fr .9fr; gap:16px; }
+    }
+    .card{
+      background: linear-gradient(180deg, var(--glass), var(--glass2));
+      border:1px solid var(--stroke);
+      border-radius:var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      padding:18px;
+    }
+    h1{ margin:0; font-size:40px; line-height:1.08; letter-spacing:.2px; font-weight:950; }
+    .sub{ margin:12px 0 0; color:var(--muted); font-size:15px; line-height:1.55; }
+    .badgeRow{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+    .pill{
+      border:1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05);
+      border-radius:999px;
+      padding:9px 12px;
+      font-weight:800;
+      font-size:13px;
+      color:rgba(255,255,255,.88);
+    }
+    .ctaRow{ display:flex; gap:10px; flex-wrap:wrap; margin-top:16px; }
+    .grid3{
+      display:grid; gap:14px; margin-top:14px;
+      grid-template-columns: 1fr;
+    }
+    @media(min-width:900px){
+      .grid3{ grid-template-columns: repeat(3, 1fr); }
+    }
+    h2{ margin:0 0 10px; font-size:16px; letter-spacing:.2px; }
+    .muted{ color:var(--muted); font-size:13px; line-height:1.55; }
+    table{
+      width:100%;
+      border-collapse:collapse;
+      overflow:hidden;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.12);
+      background: rgba(255,255,255,.04);
+      margin-top:10px;
+    }
+    th, td{
+      padding:10px 10px;
+      text-align:left;
+      border-bottom:1px solid rgba(255,255,255,.10);
+      font-size:13px;
+      color:rgba(255,255,255,.86);
+    }
+    th{ color:var(--muted); font-weight:900; }
+    tr:last-child td{ border-bottom:0; }
+    .fineprint{
+      margin-top:14px;
+      color: rgba(255,255,255,.55);
+      font-size:12px;
+      line-height:1.6;
+    }
+    .sectionTitle{
+      margin:18px 4px 10px;
+      font-weight:950;
+      letter-spacing:.2px;
+      font-size:18px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="nav">
+      <div class="logo"><span class="dot"></span> VANTAGE BRIDGE</div>
+      <div class="links">
+        <a class="btn ghost" href="#terms">Terms</a>
+        <a class="btn ghost" href="#credibility">Credibility</a>
+        <a class="btn" href="portal.html">Investor Login</a>
+        <a class="btn primary" id="startBtn" href="PASTE_GOOGLE_FORM_LINK_HERE" target="_blank" rel="noopener">Start Investing</a>
+      </div>
+    </div>
+
+    <section class="hero">
+      <div class="card">
+        <h1>Private capital access,<br/>built with disciplined execution.</h1>
+        <p class="sub">
+          Vantage Bridge Investments is designed for investors who value clarity, consistency, and secure access.
+          Your portal provides visibility into activity, payout cycles, and account security — without unnecessary noise.
+        </p>
+
+        <div class="badgeRow">
+          <div class="pill">Bi-weekly profit crediting</div>
+          <div class="pill">Optional rollover compounding</div>
+          <div class="pill">Secure investor portal</div>
+        </div>
+
+        <div class="ctaRow">
+          <a class="btn primary" href="PASTE_GOOGLE_FORM_LINK_HERE" target="_blank" rel="noopener">Start Investing</a>
+          <a class="btn" href="portal.html">Access Portal</a>
+        </div>
+
+        <div class="fineprint">
+          Important: returns are not guaranteed. Investing involves risk, including loss of capital.
+        </div>
+      </div>
+
+      <div class="card" id="terms">
+        <h2>Investment terms (overview)</h2>
+        <p class="muted">
+          Returns accrue based on the performance of your selected portfolio. Profits are credited every 14 days.
+          Investors can choose payout or automatic rollover to compound.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Plan Level</th>
+              <th>Min. Deposit</th>
+              <th>ROI Cycle</th>
+              <th>Management Fee</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Starter</td><td>$500</td><td>Bi-Weekly</td><td>0.5% (Annualized)</td></tr>
+            <tr><td>Pro</td><td>$5,000</td><td>Bi-Weekly</td><td>0.3% (Annualized)</td></tr>
+            <tr><td>Elite</td><td>$25,000</td><td>Bi-Weekly</td><td>0%</td></tr>
+          </tbody>
+        </table>
+
+        <div class="fineprint">
+          All amounts are examples and can be adjusted. This page is informational only.
+        </div>
+      </div>
+    </section>
+
+    <div class="sectionTitle" id="credibility">Credibility & investor confidence</div>
+    <section class="grid3">
+      <div class="card">
+        <h2>Transparency</h2>
+        <p class="muted">
+          Clear onboarding, defined payout cadence, and portal access that shows what’s happening — without overpromising.
+        </p>
+      </div>
+      <div class="card">
+        <h2>Security</h2>
+        <p class="muted">
+          Investor access is protected with login + optional Authenticator 2FA inside the portal.
+        </p>
+      </div>
+      <div class="card">
+        <h2>Risk disclosure</h2>
+        <p class="muted">
+          We do not guarantee returns. Capital is at risk. Investors should review terms and make independent decisions.
+        </p>
+      </div>
+    </section>
+
+    <div class="fineprint" style="margin-top:16px;">
+      © <span id="y"></span> Vantage Bridge Investments. All rights reserved.
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("y").textContent = new Date().getFullYear();
+
+    // Safety: if you forgot to replace the Google Form link, warn in console.
+    const a = document.getElementById("startBtn");
+    if (a.href.includes("PASTE_GOOGLE_FORM_LINK_HERE")) {
+      console.warn("Replace PASTE_GOOGLE_FORM_LINK_HERE with your actual Google Form URL.");
+    }
+  </script>
+</body>
+</html>
