@@ -5,11 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Vantage Bridge – Investor Portal</title>
 
-  <!-- Supabase CDN -->
   <script src="https://unpkg.com/@supabase/supabase-js@2"></script>
 
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif; }
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     body {
       margin: 0;
       min-height: 100vh;
@@ -18,6 +17,7 @@
       align-items: center;
       justify-content: center;
       color: #fff;
+      padding: 24px;
     }
     .card {
       width: 100%;
@@ -28,26 +28,20 @@
       backdrop-filter: blur(20px);
       box-shadow: 0 20px 60px rgba(0,0,0,0.4);
     }
-    h1 {
-      text-align: center;
-      margin-bottom: 6px;
-    }
-    p {
-      text-align: center;
-      opacity: 0.8;
-      margin-bottom: 28px;
-    }
+    h1 { text-align:center; margin:0 0 6px; font-weight:800; }
+    p { text-align:center; opacity:.8; margin:0 0 22px; font-size:14px; }
     input {
       width: 100%;
       padding: 14px;
       margin-bottom: 14px;
       border-radius: 14px;
-      border: none;
-      outline: none;
-      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.10);
       color: #fff;
       font-size: 15px;
+      outline: none;
     }
+    input::placeholder { color: rgba(255,255,255,0.65); }
     button {
       width: 100%;
       padding: 14px;
@@ -56,22 +50,12 @@
       font-size: 16px;
       cursor: pointer;
       margin-top: 10px;
+      font-weight: 700;
     }
-    .primary {
-      background: #3b82f6;
-      color: white;
-    }
-    .secondary {
-      background: transparent;
-      border: 1px solid rgba(255,255,255,0.3);
-      color: white;
-    }
-    .status {
-      margin-top: 18px;
-      text-align: center;
-      font-size: 14px;
-      opacity: 0.9;
-    }
+    .primary { background:#3b82f6; color:#fff; }
+    .secondary { background:transparent; border:1px solid rgba(255,255,255,0.3); color:#fff; }
+    .status { margin-top: 18px; text-align:center; font-size:14px; opacity:.92; min-height:18px; word-break:break-word; }
+    .tiny { margin-top:10px; text-align:center; font-size:12px; opacity:.7; }
   </style>
 </head>
 <body>
@@ -80,59 +64,88 @@
     <h1>Vantage Bridge</h1>
     <p>Secure investor access portal</p>
 
-    <input id="email" type="email" placeholder="Email address" />
-    <input id="password" type="password" placeholder="Password" />
+    <input id="email" type="email" placeholder="Email address" autocomplete="email" />
+    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
 
-    <button class="primary" onclick="signUp()">Create account</button>
-    <button class="secondary" onclick="signIn()">Sign in</button>
+    <button class="primary" id="btnCreate">Create account</button>
+    <button class="secondary" id="btnSignIn">Sign in</button>
 
     <div class="status" id="status">Ready</div>
+    <div class="tiny">After signup, confirm your email, then sign in.</div>
   </div>
 
 <script>
   const SUPABASE_URL = "https://vnvfbturajffvtcsjalk.supabase.co";
   const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZudmZidHVyYWpmZnZ0Y3NqYWxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA1MjYwOTQsImV4cCI6MjA4NjEwMjA5NH0.P_EMszvznKoxvxuL3z61m6T9KzOqbew8qCZ9tTxllvQ";
 
-  const supabase = supabaseJs.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const SITE_URL = "https://luc1lferx.github.io";
+  const DASHBOARD_URL = SITE_URL + "/dashboard.html";
+
+  const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
   const statusEl = document.getElementById("status");
+  const btnCreate = document.getElementById("btnCreate");
+  const btnSignIn = document.getElementById("btnSignIn");
 
-  async function signUp() {
-    statusEl.innerText = "Creating account...";
-    const email = document.getElementById("email").value;
+  function setStatus(t){ statusEl.textContent = t || ""; }
+  function lock(v){ btnCreate.disabled = v; btnSignIn.disabled = v; }
+
+  // If user is already signed in, go straight to dashboard
+  (async () => {
+    const { data } = await supabaseClient.auth.getSession();
+    if (data?.session) window.location.href = DASHBOARD_URL;
+  })();
+
+  btnCreate.addEventListener("click", async () => {
+    setStatus("Creating account…");
+    lock(true);
+
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    const { error } = await supabase.auth.signUp({
+    if(!email || !password){
+      setStatus("Please enter email + password.");
+      lock(false);
+      return;
+    }
+
+    const { error } = await supabaseClient.auth.signUp({
       email,
       password,
       options: {
-        emailRedirectTo: "https://luc1lferx.github.io"
+        // ✅ Forces the email-confirm link to come back to your GitHub site
+        emailRedirectTo: SITE_URL
       }
     });
 
-    if (error) {
-      statusEl.innerText = error.message;
-    } else {
-      statusEl.innerText = "Account created. Check your email to confirm.";
-    }
-  }
+    setStatus(error ? error.message : "Account created. Check your email to confirm.");
+    lock(false);
+  });
 
-  async function signIn() {
-    statusEl.innerText = "Signing in...";
-    const email = document.getElementById("email").value;
+  btnSignIn.addEventListener("click", async () => {
+    setStatus("Signing in…");
+    lock(true);
+
+    const email = document.getElementById("email").value.trim();
     const password = document.getElementById("password").value;
 
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password
-    });
-
-    if (error) {
-      statusEl.innerText = error.message;
-    } else {
-      statusEl.innerText = "Signed in successfully.";
+    if(!email || !password){
+      setStatus("Please enter email + password.");
+      lock(false);
+      return;
     }
-  }
+
+    const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+
+    if(error){
+      setStatus(error.message);
+      lock(false);
+      return;
+    }
+
+    // ✅ Success → go to dashboard
+    window.location.href = DASHBOARD_URL;
+  });
 </script>
 
 </body>
