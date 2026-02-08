@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Investment – Overview & How to Invest</title>
+  <meta name="description" content="Learn about the investment, expected returns, risks, and how to invest." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+
+<body>
+  <header class="header">
+    <nav class="nav">
+      <a class="brand" href="#top">YourInvestment</a>
+      <div class="links">
+        <a href="#overview">Overview</a>
+        <a href="#returns">ROI</a>
+        <a href="#how">How to invest</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <a class="btn" href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main id="top" class="main">
+    <section class="hero">
+      <div class="hero-card">
+        <p class="pill">Information page</p>
+        <h1>Understand the investment, potential ROI, and how to participate.</h1>
+        <p class="sub">
+          Simple, clear info you can share with friends. No account needed — just open the link.
+        </p>
+        <div class="cta-row">
+          <a class="btn" href="#how">How to invest</a>
+          <a class="btn ghost" href="#returns">See ROI details</a>
+        </div>
+        <p class="small muted">
+          Important: returns are never guaranteed. Read risks and FAQs below.
+        </p>
+      </div>
+    </section>
+
+    <section id="overview" class="section">
+      <h2>Overview</h2>
+      <div class="grid">
+        <div class="card">
+          <h3>What it is</h3>
+          <p><strong>[Add 1–2 sentence summary]</strong> Example: A pooled investment strategy focused on [market/asset].</p>
+        </div>
+        <div class="card">
+          <h3>Minimum investment</h3>
+          <p><strong>[e.g., €100 / $500]</strong> (You can adjust later.)</p>
+        </div>
+        <div class="card">
+          <h3>Time horizon</h3>
+          <p><strong>[e.g., 3–12 months]</strong> Suggested holding period.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="returns" class="section alt">
+      <h2>ROI / Returns</h2>
+      <div class="two">
+        <div class="card">
+          <h3>Expected ROI (target)</h3>
+          <p class="big"><strong>[e.g., 8–12% yearly]</strong></p>
+          <p class="muted small">
+            Replace with your real info. Avoid “guaranteed” language — use “target/expected” if appropriate.
+          </p>
+        </div>
+        <div class="card">
+          <h3>How returns are generated</h3>
+          <ul>
+            <li>[Example: trading strategy / revenue share / asset appreciation]</li>
+            <li>[Example: reinvestment plan or payout schedule]</li>
+            <li>[Example: fees (if any)]</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="card warn">
+        <h3>Risks</h3>
+        <ul>
+          <li>[Example: market volatility / loss of capital]</li>
+          <li>[Example: liquidity risk (funds locked for a period)]</li>
+          <li>[Example: counterparty / platform / operational risk]</li>
+        </ul>
+        <p class="small muted">Only invest what you can afford to lose.</p>
+      </div>
+    </section>
+
+    <section id="how" class="section">
+      <h2>How to invest</h2>
+      <ol class="steps">
+        <li>
+          <strong>Message me</strong> to confirm availability and get the current details.
+          <span class="muted small">This keeps everything up to date.</span>
+        </li>
+        <li>
+          <strong>Choose an amount</strong> (minimum: <span class="tag">[min amount]</span>).
+        </li>
+        <li>
+          <strong>Send funds</strong> via <span class="tag">[bank transfer / crypto / platform]</span>.
+          <span class="muted small">You’ll receive confirmation.</span>
+        </li>
+        <li>
+          <strong>Receive updates</strong> and tracking information.
+          <span class="muted small">Schedule: [weekly/monthly].</span>
+        </li>
+      </ol>
+
+      <div class="card">
+        <h3>What you’ll receive</h3>
+        <ul>
+          <li>Confirmation of your contribution</li>
+          <li>Updates on performance (e.g., weekly/monthly)</li>
+          <li>Payout details (if applicable)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="faq" class="section alt">
+      <h2>FAQ</h2>
+      <div class="faq">
+        <details>
+          <summary>Is ROI guaranteed?</summary>
+          <p>No. All investing involves risk, and results can vary. This page describes targets/expectations only.</p>
+        </details>
+        <details>
+          <summary>When can I withdraw?</summary>
+          <p>[Add your rule: anytime / after X days / at month end / etc.]</p>
+        </details>
+        <details>
+          <summary>Are there fees?</summary>
+          <p>[None / % performance fee / fixed fee — write clearly.]</p>
+        </details>
+        <details>
+          <summary>Who is this for?</summary>
+          <p>[Example: people comfortable with risk and a medium-term horizon.]</p>
+        </details>
+      </div>
+
+      <div class="card disclaimer">
+        <h3>Disclaimer</h3>
+        <p class="small muted">
+          This website is for informational purposes only and is not financial advice.
+          Investing carries risk, including possible loss of principal. Past performance does not guarantee future results.
+        </p>
+      </div>
+    </section>
+
+    <section id="contact" class="section">
+      <h2>Contact</h2>
+      <div class="card">
+        <p class="muted">Add your preferred contact button here:</p>
+        <div class="cta-row">
+          <a class="btn" href="https://wa.me/XXXXXXXXXXX" target="_blank" rel="noreferrer">WhatsApp me</a>
+          <a class="btn ghost" href="mailto:you@example.com">Email</a>
+        </div>
+        <p class="small muted">Replace the links with your real WhatsApp number / email.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>© <span id="year"></span> YourInvestment</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
