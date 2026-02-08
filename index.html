@@ -1,72 +1,271 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8" />
   <title>Vantage Bridge Investments</title>
-  <meta name="description" content="Vantage Bridge — private capital access with a secure investor portal, controlled onboarding, and disciplined execution." />
-  <link rel="stylesheet" href="./styles.css">
-</head>
-<body>
-  <div class="vb-wrap">
-    <div class="vb-top">
-      <div class="vb-brand"><span class="vb-dot"></span> VANTAGE BRIDGE</div>
-      <div class="vb-row">
-        <a class="vb-btn" href="./portal.html">Investor Login</a>
-        <a class="vb-btn vb-btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog" target="_blank" rel="noopener">Apply to Invest</a>
-      </div>
-    </div>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <div class="vb-glass vb-card">
-      <h1 class="vb-h1">Private capital access,<br/>built for clarity and control.</h1>
-      <p class="vb-sub">
-        Vantage Bridge Investments is designed for investors who value transparency, structured onboarding, and secure access.
-        Applications are reviewed manually. Approved investors fund their account using cryptocurrency inside the investor portal.
+  <style>
+    :root {
+      --primary: #288cfa;
+      --navy: #103766;
+      --bg: #eef3f8;
+      --card: rgba(255,255,255,0.9);
+      --text: #1f2937;
+      --muted: #6b7280;
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: linear-gradient(180deg, #dbeafe, #eef3f8);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 1100px;
+      margin: auto;
+      padding: 32px 20px 80px;
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      padding: 36px;
+      margin-bottom: 40px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+    }
+
+    h1, h2, h3 {
+      margin-top: 0;
+      color: var(--navy);
+    }
+
+    p {
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .hero h1 {
+      font-size: 42px;
+      margin-bottom: 16px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      margin-top: 24px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 26px;
+      border-radius: 999px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 2px solid var(--primary);
+      color: var(--primary);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .step {
+      background: #f8fafc;
+      padding: 20px;
+      border-radius: 14px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    th, td {
+      padding: 14px;
+      text-align: left;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    th {
+      color: var(--navy);
+    }
+
+    .faq-item {
+      margin-bottom: 16px;
+    }
+
+    .faq-item strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    footer {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 60px;
+      padding-top: 24px;
+      border-top: 1px solid #e5e7eb;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <!-- 1. HERO -->
+    <section class="card hero">
+      <h1>Private capital access, built for clarity and control.</h1>
+      <p>
+        Vantage Bridge Investments provides qualified investors with structured access
+        to private capital strategies. All applications are reviewed manually.
+        Approved investors fund and manage their accounts through a secure portal.
       </p>
 
-      <div class="vb-row" style="margin-top:12px;">
-        <span class="vb-pill">Manual approval</span>
-        <span class="vb-pill">Crypto-only funding</span>
-        <span class="vb-pill">Secure investor portal</span>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform">
+          Start Application
+        </a>
+        <a class="btn btn-outline" href="dashboard.html">
+          Access Portal
+        </a>
       </div>
+    </section>
 
-      <div class="vb-row" style="margin-top:14px;">
-        <a class="vb-btn vb-btn-primary" href="https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog" target="_blank" rel="noopener">Start Application</a>
-        <a class="vb-btn" href="./portal.html">Access Portal</a>
-      </div>
-
-      <div class="vb-small" style="margin-top:12px;">
-        Important: Investing involves risk, including possible loss of capital. Returns are not guaranteed.
-      </div>
-    </div>
-
-    <div class="vb-grid" style="margin-top:14px;">
-      <div class="vb-glass vb-card">
-        <div class="vb-title">How onboarding works</div>
-        <div class="vb-muted">
-          1) Apply to invest → 2) Manual review → 3) Approval → 4) Fund via crypto in your dashboard → 5) Confirmation & activation.
+    <!-- 2. HOW ONBOARDING WORKS -->
+    <section class="card">
+      <h2>How onboarding works</h2>
+      <div class="steps">
+        <div class="step">
+          <h3>1. Apply</h3>
+          <p>Submit an investor application for review.</p>
+        </div>
+        <div class="step">
+          <h3>2. Review</h3>
+          <p>Applications are manually evaluated for eligibility.</p>
+        </div>
+        <div class="step">
+          <h3>3. Approval</h3>
+          <p>Approved investors receive portal access.</p>
+        </div>
+        <div class="step">
+          <h3>4. Fund</h3>
+          <p>Fund your account using cryptocurrency inside the portal.</p>
         </div>
       </div>
+    </section>
 
-      <div class="vb-glass vb-card">
-        <div class="vb-title">Credibility signals</div>
-        <div class="vb-muted">
-          We prioritize clear process, secure access, and documented communication. We avoid guarantees and overpromising.
-        </div>
+    <!-- 3. INVESTMENT TERMS -->
+    <section class="card">
+      <h2>Investment terms (overview)</h2>
+      <p>Returns accrue based on portfolio performance. Profits are credited bi-weekly.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Plan</th>
+            <th>Minimum Deposit</th>
+            <th>ROI Cycle</th>
+            <th>Management Fee</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Starter</td>
+            <td>$500</td>
+            <td>Bi-weekly</td>
+            <td>0.5% annualized</td>
+          </tr>
+          <tr>
+            <td>Pro</td>
+            <td>$5,000</td>
+            <td>Bi-weekly</td>
+            <td>0.3% annualized</td>
+          </tr>
+          <tr>
+            <td>Elite</td>
+            <td>$25,000</td>
+            <td>Bi-weekly</td>
+            <td>0%</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- 4. SECURITY & FUNDING -->
+    <section class="card">
+      <h2>Security & funding</h2>
+      <ul>
+        <li>Email-verified investor accounts</li>
+        <li>Authenticator-based 2FA</li>
+        <li>Manual approval before funding</li>
+        <li>Crypto-only funding (BTC & USDT)</li>
+        <li>TX hash verification before activation</li>
+      </ul>
+    </section>
+
+    <!-- 5. FAQ -->
+    <section class="card">
+      <h2>Frequently asked questions</h2>
+
+      <div class="faq-item">
+        <strong>Are returns guaranteed?</strong>
+        <p>No. Returns depend on market performance and are not guaranteed.</p>
       </div>
 
-      <div class="vb-glass vb-card vb-span-2">
-        <div class="vb-title">Contact</div>
-        <div class="vb-muted">
-          Email: <a href="mailto:vantagebridge.invest@outlook.com"><b>vantagebridge.invest@outlook.com</b></a>
-          <br/>Response time: typically within 24–48 hours.
-        </div>
-        <hr class="vb-hr">
-        <div class="vb-small">
-          This website is informational only and does not constitute financial advice. Investors should make independent decisions.
-        </div>
+      <div class="faq-item">
+        <strong>When are profits credited?</strong>
+        <p>Profits are calculated and credited every 14 days.</p>
       </div>
-    </div>
+
+      <div class="faq-item">
+        <strong>Can I withdraw anytime?</strong>
+        <p>Withdrawal terms depend on your plan and portfolio conditions.</p>
+      </div>
+
+      <div class="faq-item">
+        <strong>Which cryptocurrencies are accepted?</strong>
+        <p>BTC and USDT (ERC-20).</p>
+      </div>
+    </section>
+
+    <!-- 6. CONTACT -->
+    <section class="card">
+      <h2>Contact</h2>
+      <p>
+        Investor inquiries:<br />
+        <strong>vantagebridge.invest@outlook.com</strong>
+      </p>
+    </section>
+
+    <!-- 7. RISK DISCLOSURE -->
+    <footer>
+      <strong>Risk disclosure:</strong><br />
+      Investing involves risk, including possible loss of capital.
+      Past performance does not guarantee future results.
+      This platform does not provide financial advice.
+    </footer>
+
   </div>
 </body>
 </html>
