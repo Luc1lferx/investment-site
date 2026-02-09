@@ -727,9 +727,7 @@
     // ---------- TRANSACTIONS (NEW) ----------
     function explorerLink(asset, tx){
       if (!tx) return null;
-      // Basic explorers; feel free to customize
       if (asset === "BTC") return "https://www.blockchain.com/explorer/transactions/btc/" + encodeURIComponent(tx);
-      // USDT ERC20 = Ethereum tx
       if (asset === "USDT_ERC20") return "https://etherscan.io/tx/" + encodeURIComponent(tx);
       return null;
     }
@@ -910,71 +908,85 @@
       }
     });
 
-    // ---------- ADMIN (kept but now updates profiles directly) ----------
-    async function upsertProfile(email, status){
-      const role = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "investor";
-      const { error } = await supabase
-        .from("profiles")
-        .upsert([{ email, status, role }], { onConflict: "email" });
+    // ---------- ADMIN (FIXED: use RPC approve_investor) ----------
+    async function requireAdmin(){
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("Not signed in");
+      if ((user.email ?? "").toLowerCase() !== ADMIN_EMAIL.toLowerCase()){
+        throw new Error("Not authorized");
+      }
+      return user;
+    }
+
+    async function setInvestorStatus(investorEmail, newStatus){
+      await requireAdmin();
+
+      const { error } = await supabase.rpc("approve_investor", {
+        investor_email: investorEmail,
+        new_status: newStatus
+      });
+
       if (error) throw error;
     }
 
     $("btnApprove")?.addEventListener("click", async () => {
       const email = $("adminEmail").value.trim();
       if (!email) return adminSet("Enter an investor email.", "bad");
-      adminSet("Saving…", "neutral");
+
+      adminSet("Approving…", "neutral");
       try{
-        await upsertProfile(email, "approved");
+        await setInvestorStatus(email, "approved");
         adminSet("Investor approved ✅", "ok");
       }catch(e){
-        adminSet("Could not save approval. (Does profiles table exist + trigger/backfill?)", "bad");
+        adminSet(`Approval failed: ${e?.message ?? "error"}`, "bad");
       }
     });
 
     $("btnSetReview")?.addEventListener("click", async () => {
       const email = $("adminEmail").value.trim();
       if (!email) return adminSet("Enter an investor email.", "bad");
-      adminSet("Saving…", "neutral");
+
+      adminSet("Updating…", "neutral");
       try{
-        await upsertProfile(email, "under_review");
+        await setInvestorStatus(email, "under_review");
         adminSet("Investor set to under review ⏳", "warn");
       }catch(e){
-        adminSet("Could not save. (Does profiles table exist + trigger/backfill?)", "bad");
+        adminSet(`Update failed: ${e?.message ?? "error"}`, "bad");
       }
     });
 
-   $("btnLoadAdminTx")?.addEventListener("click", async () => {
-  adminSet("Loading…", "neutral");
-  try{
-    const { data, error } = await supabase.rpc("admin_list_transactions", { limit_count: 25 });
-    if (error) throw error;
+    $("btnLoadAdminTx")?.addEventListener("click", async () => {
+      adminSet("Loading…", "neutral");
+      try{
+        const { data, error } = await supabase.rpc("admin_list_transactions", { limit_count: 25 });
+        if (error) throw error;
 
-    const body = $("adminTxTable");
-    body.innerHTML = "";
+        const body = $("adminTxTable");
+        body.innerHTML = "";
 
-    if (!data || data.length === 0){
-      body.innerHTML = `<tr><td colspan="5" class="muted">No transactions yet.</td></tr>`;
-      adminSet("No transactions found.", "warn");
-      return;
-    }
+        if (!data || data.length === 0){
+          body.innerHTML = `<tr><td colspan="5" class="muted">No transactions yet.</td></tr>`;
+          adminSet("No transactions found.", "warn");
+          return;
+        }
 
-    for (const row of data){
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${row.email ?? "—"}</td>
-        <td>${row.type ?? "—"}</td>
-        <td>${row.asset ?? "—"}</td>
-        <td>${row.amount ?? "—"}</td>
-        <td>${row.status ?? "—"}</td>
-      `;
-      body.appendChild(tr);
-    }
+        for (const row of data){
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${row.email ?? "—"}</td>
+            <td>${row.type ?? "—"}</td>
+            <td>${row.asset ?? "—"}</td>
+            <td>${row.amount ?? "—"}</td>
+            <td>${row.status ?? "—"}</td>
+          `;
+          body.appendChild(tr);
+        }
 
-    adminSet("Loaded ✅", "ok");
-  }catch(e){
-    adminSet(`Could not load: ${e.message ?? "error"}`, "bad");
-  }
-});
+        adminSet("Loaded ✅", "ok");
+      }catch(e){
+        adminSet(`Could not load: ${e?.message ?? "error"}`, "bad");
+      }
+    });
 
     // ---------- INIT ----------
     let currentUser = null;
