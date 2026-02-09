@@ -106,6 +106,7 @@
       color: rgba(234,241,255,.85);
       font-size: 12px;
       font-weight:700;
+      white-space:nowrap;
     }
 
     .statusBox{
@@ -165,6 +166,7 @@
       border-bottom: 1px solid rgba(255,255,255,.10);
       color: rgba(234,241,255,.9);
       font-size: 13px;
+      vertical-align: top;
     }
     th{color: rgba(234,241,255,.78); font-weight: 800; background: rgba(255,255,255,.06)}
     tr:last-child td{border-bottom:0}
@@ -190,6 +192,8 @@
     a:hover{opacity:.9}
 
     .hidden{display:none !important}
+    .small{font-size:12px}
+    .mono{font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;}
   </style>
 </head>
 
@@ -219,12 +223,27 @@
             <h2>Account</h2>
             <div class="muted" id="whoami">Loading…</div>
           </div>
-          <div class="pill" id="approvalPill">Status: …</div>
+          <div class="row" style="gap:8px; justify-content:flex-end">
+            <div class="pill" id="applicationPill">Application: …</div>
+            <div class="pill" id="approvalPill">Status: …</div>
+          </div>
         </div>
 
         <div class="statusBox" id="statusBox" role="status" aria-live="polite">
           <div class="dot neutral" id="statusDot"></div>
           <div id="statusText">Ready.</div>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- DASHBOARD METRICS (NEW) -->
+        <h2>Overview</h2>
+        <div class="muted">Your account summary (updates after deposits are confirmed).</div>
+
+        <div class="miniGrid" id="metrics">
+          <div class="metric"><div class="k">Total funded</div><div class="v" id="mFunded">—</div></div>
+          <div class="metric"><div class="k">Pending deposits</div><div class="v" id="mPending">—</div></div>
+          <div class="metric"><div class="k">Last profit date</div><div class="v" id="mProfit">—</div></div>
         </div>
 
         <div class="divider"></div>
@@ -248,6 +267,57 @@
             <tr><td>Solana (SOL)</td><td id="tSOL">—</td><td id="cSOL">—</td></tr>
           </tbody>
         </table>
+
+        <div class="divider"></div>
+
+        <!-- APPLICATION (NEW, replaces Google Form) -->
+        <div id="applicationSection">
+          <h2>Investor application</h2>
+          <div class="muted">Complete this inside the portal. You can edit/resubmit until you’re approved.</div>
+
+          <div class="twoCol">
+            <div>
+              <label for="appName">Full name</label>
+              <input id="appName" placeholder="Your full name" />
+            </div>
+            <div>
+              <label for="appPhone">Phone</label>
+              <input id="appPhone" placeholder="+1 555 123 4567" />
+            </div>
+          </div>
+
+          <div class="twoCol">
+            <div>
+              <label for="appCountry">Country</label>
+              <input id="appCountry" placeholder="e.g., Nigeria" />
+            </div>
+            <div>
+              <label for="appPlan">Plan</label>
+              <select id="appPlan">
+                <option value="">Select…</option>
+                <option value="Starter">Starter</option>
+                <option value="Pro">Pro</option>
+                <option value="Elite">Elite</option>
+              </select>
+            </div>
+          </div>
+
+          <label for="appSource">Source of funds</label>
+          <input id="appSource" placeholder="e.g., Salary / Business / Savings / Crypto" />
+
+          <label for="appNotes">Notes (optional)</label>
+          <textarea id="appNotes" placeholder="Anything you want us to know…"></textarea>
+
+          <div class="row" style="margin-top:10px">
+            <button class="secondary" id="btnSaveApp">Save</button>
+            <button id="btnSubmitApp">Submit application</button>
+          </div>
+
+          <div class="statusBox" id="appBox">
+            <div class="dot neutral" id="appDot"></div>
+            <div id="appText">Application ready.</div>
+          </div>
+        </div>
 
         <div class="divider"></div>
 
@@ -292,12 +362,37 @@
 
           <div class="row" style="margin-top:10px">
             <button id="btnSubmitTx">Submit TX hash</button>
-            <button class="secondary" id="btnViewApplication">Apply / Update application</button>
           </div>
 
           <div class="statusBox" id="txBox">
             <div class="dot neutral" id="txDot"></div>
             <div id="txText">No submission yet.</div>
+          </div>
+
+          <div class="divider"></div>
+
+          <!-- TRANSACTIONS HISTORY (NEW) -->
+          <h2>Transactions</h2>
+          <div class="muted">Deposits, withdrawals, and profit credits. Deposits start as pending until confirmed.</div>
+
+          <table aria-label="Transactions table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Asset</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Receipt</th>
+              </tr>
+            </thead>
+            <tbody id="txHistory">
+              <tr><td colspan="6" class="muted">Loading…</td></tr>
+            </tbody>
+          </table>
+
+          <div class="row" style="margin-top:10px">
+            <button class="ghost" id="btnLoadMyTx">Refresh transactions</button>
           </div>
         </div>
 
@@ -305,10 +400,7 @@
         <div id="notApprovedSection" class="hidden">
           <h2>Funding (Crypto-only)</h2>
           <div class="muted">
-            Status: <b>Under review</b>. Complete the application first. Funding unlocks after approval.
-          </div>
-          <div class="row" style="margin-top:10px">
-            <button class="secondary" id="btnApplyNow">Start / Continue application</button>
+            Status: <b>Under review</b>. Submit your application first. Funding unlocks after approval.
           </div>
         </div>
 
@@ -398,18 +490,18 @@
 
           <div class="divider"></div>
 
-          <h2 style="font-size:16px;">Recent TX submissions</h2>
-          <div class="muted">We can display real rows after you create the table in Supabase SQL editor.</div>
+          <h2 style="font-size:16px;">Latest activity</h2>
+          <div class="muted">Recent deposits (pending/confirmed). This reads from <span class="mono">public.transactions</span>.</div>
 
           <table>
-            <thead><tr><th>User</th><th>Asset</th><th>TX</th><th>Status</th></tr></thead>
-            <tbody id="txTable">
-              <tr><td colspan="4" class="muted">No data loaded yet.</td></tr>
+            <thead><tr><th>User</th><th>Type</th><th>Asset</th><th>Amount</th><th>Status</th></tr></thead>
+            <tbody id="adminTxTable">
+              <tr><td colspan="5" class="muted">No data loaded yet.</td></tr>
             </tbody>
           </table>
 
           <div class="row" style="margin-top:10px">
-            <button id="btnLoadTx" class="ghost">Load latest TX</button>
+            <button id="btnLoadAdminTx" class="ghost">Load latest</button>
           </div>
         </div>
       </div>
@@ -431,19 +523,37 @@
       $(dotId).className = "dot " + (kind === "ok" ? "ok" : kind === "bad" ? "bad" : kind === "warn" ? "warn" : "neutral");
     }
     function setMain(msg, kind="neutral"){ setBox("statusDot","statusText", msg, kind); }
+    function adminSet(msg, kind="neutral"){ setBox("adminDot","adminText", msg, kind); }
+    function appSet(msg, kind="neutral"){ setBox("appDot","appText", msg, kind); }
+
+    const fmtMoney = (n) => {
+      if (n == null || Number.isNaN(Number(n))) return "—";
+      return "$" + Number(n).toLocaleString(undefined, { maximumFractionDigits: 2 });
+    };
+    const fmtDate = (iso) => {
+      if (!iso) return "—";
+      try {
+        const d = new Date(iso);
+        return d.toLocaleDateString(undefined, { year:"numeric", month:"short", day:"numeric" });
+      } catch { return "—"; }
+    };
+
+    function setApplicationPill(status){
+      const map = {
+        draft: "Application: Draft",
+        submitted: "Application: Submitted",
+        under_review: "Application: Under review",
+        approved: "Application: Approved ✅",
+        rejected: "Application: Rejected"
+      };
+      $("applicationPill").textContent = map[status] ?? "Application: —";
+    }
 
     $("btnBackHome").addEventListener("click", () => window.location.href = "./index.html");
     $("btnRefresh").addEventListener("click", () => init());
     $("btnSignOut").addEventListener("click", async () => {
       await supabase.auth.signOut();
       window.location.href = "./portal.html";
-    });
-
-    $("btnViewApplication").addEventListener("click", () => {
-      window.open("https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog", "_blank");
-    });
-    $("btnApplyNow")?.addEventListener("click", () => {
-      window.open("https://docs.google.com/forms/d/e/1FAIpQLSd5oOZq-yT1fuH2tbAuryfuWsEOQvP1RfPq7AC9ePac1WuLGQ/viewform?usp=dialog", "_blank");
     });
 
     async function requireAuth(){
@@ -482,13 +592,11 @@
         $("cETH").textContent = pct(ethC);
         $("cSOL").textContent = pct(solC);
       }catch(e){
-        // silently ignore (rate limits happen)
+        // ignore (rate limits happen)
       }
     }
 
-    // ---------- APPROVAL LOGIC ----------
-    // We store approval in a "profiles" table. If you haven't created it yet,
-    // dashboard still works but defaults to "under review".
+    // ---------- APPROVAL ----------
     async function getApproval(email){
       try{
         const { data, error } = await supabase
@@ -511,13 +619,165 @@
 
       $("approvalPill").textContent = approved ? "Status: Approved ✅" : "Status: Under review ⏳";
       if (approved) setMain("Approved. Funding is enabled.", "ok");
-      else setMain("Under review. Complete your application for approval.", "warn");
+      else setMain("Under review. Submit your application for approval.", "warn");
     }
 
-    // ---------- TX SUBMISSION ----------
+    // ---------- METRICS (NEW) ----------
+    async function loadMetrics(userId){
+      // view: public.v_user_metrics
+      try{
+        const { data, error } = await supabase
+          .from("v_user_metrics")
+          .select("total_funded, pending_deposits, last_profit_at")
+          .eq("user_id", userId)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        $("mFunded").textContent = fmtMoney(data?.total_funded ?? 0);
+        $("mPending").textContent = fmtMoney(data?.pending_deposits ?? 0);
+        $("mProfit").textContent = data?.last_profit_at ? fmtDate(data.last_profit_at) : "—";
+      }catch(e){
+        $("mFunded").textContent = "—";
+        $("mPending").textContent = "—";
+        $("mProfit").textContent = "—";
+      }
+    }
+
+    // ---------- APPLICATION (NEW) ----------
+    async function ensureApplication(user){
+      // One application per user_id (unique)
+      try{
+        const { data, error } = await supabase
+          .from("applications")
+          .select("*")
+          .eq("user_id", user.id)
+          .maybeSingle();
+
+        if (error) throw error;
+
+        if (data) return data;
+
+        // create draft
+        const { data: ins, error: insErr } = await supabase
+          .from("applications")
+          .insert([{
+            user_id: user.id,
+            email: user.email,
+            status: "draft"
+          }])
+          .select("*")
+          .single();
+
+        if (insErr) throw insErr;
+        return ins;
+      }catch(e){
+        // table missing / RLS misconfigured
+        return null;
+      }
+    }
+
+    function fillApplicationForm(app){
+      $("appName").value = app?.full_name ?? "";
+      $("appPhone").value = app?.phone ?? "";
+      $("appCountry").value = app?.country ?? "";
+      $("appPlan").value = app?.plan ?? "";
+      $("appSource").value = app?.source_of_funds ?? "";
+      $("appNotes").value = app?.notes ?? "";
+      setApplicationPill(app?.status ?? "draft");
+    }
+
+    async function saveApplication(user, asSubmit=false){
+      const payload = {
+        user_id: user.id,
+        email: user.email,
+        full_name: $("appName").value.trim() || null,
+        phone: $("appPhone").value.trim() || null,
+        country: $("appCountry").value.trim() || null,
+        plan: $("appPlan").value || null,
+        source_of_funds: $("appSource").value.trim() || null,
+        notes: $("appNotes").value.trim() || null,
+      };
+
+      if (asSubmit){
+        payload.status = "submitted";
+        payload.submitted_at = new Date().toISOString();
+      }
+
+      appSet(asSubmit ? "Submitting…" : "Saving…", "neutral");
+
+      try{
+        const { data, error } = await supabase
+          .from("applications")
+          .upsert([payload], { onConflict: "user_id" })
+          .select("*")
+          .single();
+
+        if (error) throw error;
+
+        fillApplicationForm(data);
+
+        if (asSubmit) appSet("Application submitted ✅", "ok");
+        else appSet("Saved ✅", "ok");
+      }catch(e){
+        appSet("Could not save application (check tables/RLS).", "bad");
+      }
+    }
+
+    // ---------- TRANSACTIONS (NEW) ----------
+    function explorerLink(asset, tx){
+      if (!tx) return null;
+      // Basic explorers; feel free to customize
+      if (asset === "BTC") return "https://www.blockchain.com/explorer/transactions/btc/" + encodeURIComponent(tx);
+      // USDT ERC20 = Ethereum tx
+      if (asset === "USDT_ERC20") return "https://etherscan.io/tx/" + encodeURIComponent(tx);
+      return null;
+    }
+
+    async function loadMyTransactions(userId){
+      try{
+        const { data, error } = await supabase
+          .from("transactions")
+          .select("created_at,type,asset,amount,status,tx_hash,receipt_url")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(25);
+
+        if (error) throw error;
+
+        const body = $("txHistory");
+        body.innerHTML = "";
+
+        if (!data || data.length === 0){
+          body.innerHTML = `<tr><td colspan="6" class="muted">No transactions yet.</td></tr>`;
+          return;
+        }
+
+        for (const row of data){
+          const link = row.receipt_url || explorerLink(row.asset, row.tx_hash);
+          const receipt = link ? `<a href="${link}" target="_blank" rel="noopener">View</a>` : "—";
+          const amount = row.amount == null ? "—" : String(row.amount);
+
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+            <td>${fmtDate(row.created_at)}</td>
+            <td>${row.type ?? "—"}</td>
+            <td>${row.asset ?? "—"}</td>
+            <td>${amount}</td>
+            <td>${row.status ?? "—"}</td>
+            <td>${receipt}</td>
+          `;
+          body.appendChild(tr);
+        }
+      }catch(e){
+        $("txHistory").innerHTML = `<tr><td colspan="6" class="muted">Could not load transactions (check tables/RLS).</td></tr>`;
+      }
+    }
+
+    // Submit TX => creates a pending deposit in public.transactions
     $("btnSubmitTx").addEventListener("click", async () => {
       const asset = $("asset").value;
-      const amount = $("amount").value.trim();
+      const amountRaw = $("amount").value.trim();
       const tx = $("txhash").value.trim();
 
       if (!tx) return setBox("txDot","txText","Please paste a TX hash.", "bad");
@@ -527,29 +787,45 @@
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
 
+      const amount = amountRaw ? Number(amountRaw) : null;
+      if (amountRaw && (Number.isNaN(amount) || amount <= 0)){
+        return setBox("txDot","txText","Amount must be a positive number (or leave blank).", "bad");
+      }
+
       try{
         const { error } = await supabase
-          .from("funding_submissions")
+          .from("transactions")
           .insert([{
             user_id: user.id,
             email: user.email,
+            type: "deposit",
+            direction: "credit",
             asset,
-            amount: amount || null,
+            amount,
             tx_hash: tx,
             status: "pending"
           }]);
 
         if (error) throw error;
 
-        setBox("txDot","txText","TX submitted. Status: pending confirmation.", "warn");
+        setBox("txDot","txText","Deposit submitted. Status: pending confirmation.", "warn");
         $("txhash").value = "";
+        $("amount").value = "";
+        await loadMyTransactions(user.id);
+        await loadMetrics(user.id);
       }catch(e){
-        // If table isn't created yet, show a clear message
-        setBox("txDot","txText","Could not save TX yet. (We need to create the Supabase table first.)", "bad");
+        setBox("txDot","txText","Could not save deposit yet. (Check transactions table/RLS.)", "bad");
       }
     });
 
-    // ---------- MFA (TOTP) ----------
+    $("btnLoadMyTx")?.addEventListener("click", async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      await loadMyTransactions(user.id);
+      await loadMetrics(user.id);
+    });
+
+    // ---------- MFA (TOTP) (kept) ----------
     async function loadMfa(){
       $("mfaEnroll").classList.add("hidden");
       $("mfaEnabled").classList.add("hidden");
@@ -578,7 +854,7 @@
 
     let enrollFactorId = null;
 
-    $("btnEnroll").addEventListener("click", async () => {
+    $("btnEnroll")?.addEventListener("click", async () => {
       $("btnEnroll").disabled = true;
       $("mfaState").textContent = "Generating QR…";
 
@@ -589,14 +865,12 @@
         enrollFactorId = data.id;
         $("mfaSecret").textContent = data.totp.secret;
 
-        // Use the QR from Supabase (data.totp.qr_code) if present, else build a QR from the URI
         const qr = data.totp.qr_code ?? null;
         const uri = data.totp.uri;
 
         if (qr){
           $("qrImg").src = qr;
         } else {
-          // fallback: use a public QR generator
           $("qrImg").src = "https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=" + encodeURIComponent(uri);
         }
 
@@ -609,7 +883,7 @@
       }
     });
 
-    $("btnVerifyMfa").addEventListener("click", async () => {
+    $("btnVerifyMfa")?.addEventListener("click", async () => {
       const code = $("mfaCode").value.trim();
       if (!code || code.length < 6) return;
 
@@ -617,7 +891,6 @@
       $("mfaState").textContent = "Verifying…";
 
       try{
-        // create a challenge + verify
         const { data: challenge, error: chErr } = await supabase.auth.mfa.challenge({ factorId: enrollFactorId });
         if (chErr) throw chErr;
 
@@ -637,102 +910,120 @@
       }
     });
 
-    // ---------- ADMIN ----------
-    function adminSet(msg, kind="neutral"){ setBox("adminDot","adminText", msg, kind); }
-
+    // ---------- ADMIN (kept but now updates profiles directly) ----------
     async function upsertProfile(email, status){
       const role = (email.toLowerCase() === ADMIN_EMAIL.toLowerCase()) ? "admin" : "investor";
-
       const { error } = await supabase
         .from("profiles")
         .upsert([{ email, status, role }], { onConflict: "email" });
-
       if (error) throw error;
     }
 
-    $("btnApprove").addEventListener("click", async () => {
+    $("btnApprove")?.addEventListener("click", async () => {
       const email = $("adminEmail").value.trim();
       if (!email) return adminSet("Enter an investor email.", "bad");
       adminSet("Saving…", "neutral");
       try{
         await upsertProfile(email, "approved");
         adminSet("Investor approved ✅", "ok");
-      }catch{
-        adminSet("Could not save approval (create profiles table first).", "bad");
+      }catch(e){
+        adminSet("Could not save approval. (Does profiles table exist + trigger/backfill?)", "bad");
       }
     });
 
-    $("btnSetReview").addEventListener("click", async () => {
+    $("btnSetReview")?.addEventListener("click", async () => {
       const email = $("adminEmail").value.trim();
       if (!email) return adminSet("Enter an investor email.", "bad");
       adminSet("Saving…", "neutral");
       try{
         await upsertProfile(email, "under_review");
         adminSet("Investor set to under review ⏳", "warn");
-      }catch{
-        adminSet("Could not save (create profiles table first).", "bad");
+      }catch(e){
+        adminSet("Could not save. (Does profiles table exist + trigger/backfill?)", "bad");
       }
     });
 
-    $("btnLoadTx").addEventListener("click", async () => {
-      adminSet("Loading TX…", "neutral");
-      try{
-        const { data, error } = await supabase
-          .from("funding_submissions")
-          .select("email, asset, tx_hash, status, created_at")
-          .order("created_at", { ascending: false })
-          .limit(10);
+   $("btnLoadAdminTx")?.addEventListener("click", async () => {
+  adminSet("Loading…", "neutral");
+  try{
+    const { data, error } = await supabase.rpc("admin_list_transactions", { limit_count: 25 });
+    if (error) throw error;
 
-        if (error) throw error;
+    const body = $("adminTxTable");
+    body.innerHTML = "";
 
-        const body = $("txTable");
-        body.innerHTML = "";
+    if (!data || data.length === 0){
+      body.innerHTML = `<tr><td colspan="5" class="muted">No transactions yet.</td></tr>`;
+      adminSet("No transactions found.", "warn");
+      return;
+    }
 
-        if (!data || data.length === 0){
-          body.innerHTML = `<tr><td colspan="4" class="muted">No submissions yet.</td></tr>`;
-          adminSet("No submissions found.", "warn");
-          return;
-        }
+    for (const row of data){
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row.email ?? "—"}</td>
+        <td>${row.type ?? "—"}</td>
+        <td>${row.asset ?? "—"}</td>
+        <td>${row.amount ?? "—"}</td>
+        <td>${row.status ?? "—"}</td>
+      `;
+      body.appendChild(tr);
+    }
 
-        for (const row of data){
-          const txShort = row.tx_hash ? row.tx_hash.slice(0,10) + "…" + row.tx_hash.slice(-8) : "—";
-          const tr = document.createElement("tr");
-          tr.innerHTML = `
-            <td>${row.email ?? "—"}</td>
-            <td>${row.asset ?? "—"}</td>
-            <td title="${row.tx_hash ?? ""}">${txShort}</td>
-            <td>${row.status ?? "—"}</td>
-          `;
-          body.appendChild(tr);
-        }
-        adminSet("Loaded latest TX ✅", "ok");
-      }catch{
-        adminSet("Could not load TX (create funding_submissions table first).", "bad");
-      }
-    });
+    adminSet("Loaded ✅", "ok");
+  }catch(e){
+    adminSet(`Could not load: ${e.message ?? "error"}`, "bad");
+  }
+});
 
     // ---------- INIT ----------
+    let currentUser = null;
+
+    $("btnSaveApp")?.addEventListener("click", async () => {
+      if (!currentUser) return;
+      await saveApplication(currentUser, false);
+    });
+
+    $("btnSubmitApp")?.addEventListener("click", async () => {
+      if (!currentUser) return;
+      await saveApplication(currentUser, true);
+    });
+
     async function init(){
       const user = await requireAuth();
       if (!user) return;
+      currentUser = user;
 
       $("whoami").textContent = `Signed in as ${user.email}`;
       const isAdmin = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
       $("adminPanel").classList.toggle("hidden", !isAdmin);
 
-      // Approval
+      // approval
       const prof = await getApproval(user.email);
       applyApprovalUI(prof.status);
 
-      // Crypto prices
+      // application
+      const app = await ensureApplication(user);
+      if (app){
+        fillApplicationForm(app);
+        appSet("Loaded ✅", "ok");
+      } else {
+        setApplicationPill("draft");
+        appSet("Application unavailable (run SQL setup / check RLS).", "bad");
+      }
+
+      // crypto
       await loadCrypto();
 
-      // MFA
+      // metrics + tx history
+      await loadMetrics(user.id);
+      await loadMyTransactions(user.id);
+
+      // mfa
       await loadMfa();
     }
 
     init();
-    // refresh prices every 60s
     setInterval(loadCrypto, 60000);
   </script>
 </body>
