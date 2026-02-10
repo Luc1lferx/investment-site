@@ -368,6 +368,41 @@
 
           <div class="divider"></div>
 
+          <!-- ✅ D) WITHDRAWALS (ADDED) -->
+          <h2>Withdrawals</h2>
+          <div class="muted">
+            Request a withdrawal to your wallet. Requests are reviewed and processed manually.
+          </div>
+
+          <div class="twoCol">
+            <div>
+              <label for="wdAsset">Asset</label>
+              <select id="wdAsset">
+                <option value="BTC">BTC</option>
+                <option value="USDT_ERC20">USDT (ERC-20)</option>
+              </select>
+            </div>
+            <div>
+              <label for="wdAmount">Amount</label>
+              <input id="wdAmount" placeholder="e.g., 250" inputmode="decimal" />
+            </div>
+          </div>
+
+          <label for="wdWallet">Wallet address</label>
+          <input id="wdWallet" placeholder="Paste your wallet address here…" />
+
+          <div class="row" style="margin-top:10px">
+            <button id="btnRequestWithdrawal" class="secondary">Request withdrawal</button>
+          </div>
+
+          <div class="statusBox" id="wdBox">
+            <div class="dot neutral" id="wdDot"></div>
+            <div id="wdText">No withdrawal request yet.</div>
+          </div>
+          <!-- ✅ END WITHDRAWALS -->
+
+          <div class="divider"></div>
+
           <h2>Transactions</h2>
           <div class="muted">Deposits, withdrawals, and profit credits. Deposits start as pending until confirmed.</div>
 
@@ -814,6 +849,53 @@
       }
     });
 
+    // ✅ D) Withdrawals JS (ADDED)
+    $("btnRequestWithdrawal")?.addEventListener("click", async () => {
+      const asset = $("wdAsset")?.value;
+      const amountRaw = $("wdAmount")?.value?.trim() ?? "";
+      const wallet = $("wdWallet")?.value?.trim() ?? "";
+
+      if (!wallet) return setBox("wdDot","wdText","Please enter your wallet address.", "bad");
+      if (!amountRaw) return setBox("wdDot","wdText","Please enter an amount.", "bad");
+
+      const amount = Number(amountRaw);
+      if (Number.isNaN(amount) || amount <= 0){
+        return setBox("wdDot","wdText","Amount must be a positive number.", "bad");
+      }
+
+      setBox("wdDot","wdText","Submitting withdrawal request…", "neutral");
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+
+      try{
+        const { error } = await supabase
+          .from("transactions")
+          .insert([{
+            user_id: user.id,
+            email: user.email,
+            type: "withdrawal",
+            direction: "debit",
+            asset,
+            amount,
+            // store wallet inside tx_hash so it works with your current columns:
+            tx_hash: "wallet:" + wallet,
+            status: "pending"
+          }]);
+
+        if (error) throw error;
+
+        setBox("wdDot","wdText","Withdrawal request submitted ✅ (pending review).", "warn");
+        $("wdAmount").value = "";
+        $("wdWallet").value = "";
+        await loadMyTransactions(user.id);
+        await loadMetrics(user.id);
+      }catch(e){
+        setBox("wdDot","wdText","Could not submit withdrawal (check transactions table/RLS).", "bad");
+      }
+    });
+    // ✅ END Withdrawals JS
+
     $("btnLoadMyTx")?.addEventListener("click", async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -1000,7 +1082,6 @@
           body.appendChild(tr);
         }
 
-        // Delegate click handler (overwrites each time, avoids duplicates)
         body.onclick = async (e) => {
           const t = e.target;
           const approveId = t?.getAttribute?.("data-approve");
