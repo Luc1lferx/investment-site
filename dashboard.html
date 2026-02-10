@@ -236,7 +236,6 @@
 
         <div class="divider"></div>
 
-        <!-- DASHBOARD METRICS (NEW) -->
         <h2>Overview</h2>
         <div class="muted">Your account summary (updates after deposits are confirmed).</div>
 
@@ -270,7 +269,6 @@
 
         <div class="divider"></div>
 
-        <!-- APPLICATION (NEW, replaces Google Form) -->
         <div id="applicationSection">
           <h2>Investor application</h2>
           <div class="muted">Complete this inside the portal. You can edit/resubmit until you’re approved.</div>
@@ -321,7 +319,6 @@
 
         <div class="divider"></div>
 
-        <!-- FUNDING widget (approved only) -->
         <div id="fundingSection">
           <h2>Funding (Crypto-only)</h2>
           <div class="muted">
@@ -371,7 +368,6 @@
 
           <div class="divider"></div>
 
-          <!-- TRANSACTIONS HISTORY (NEW) -->
           <h2>Transactions</h2>
           <div class="muted">Deposits, withdrawals, and profit credits. Deposits start as pending until confirmed.</div>
 
@@ -396,7 +392,6 @@
           </div>
         </div>
 
-        <!-- NOT approved message -->
         <div id="notApprovedSection" class="hidden">
           <h2>Funding (Crypto-only)</h2>
           <div class="muted">
@@ -494,9 +489,18 @@
           <div class="muted">Recent deposits (pending/confirmed). This reads from <span class="mono">public.transactions</span>.</div>
 
           <table>
-            <thead><tr><th>User</th><th>Type</th><th>Asset</th><th>Amount</th><th>Status</th></tr></thead>
+            <thead>
+              <tr>
+                <th>User</th>
+                <th>Type</th>
+                <th>Asset</th>
+                <th>Amount</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
             <tbody id="adminTxTable">
-              <tr><td colspan="5" class="muted">No data loaded yet.</td></tr>
+              <tr><td colspan="6" class="muted">No data loaded yet.</td></tr>
             </tbody>
           </table>
 
@@ -622,9 +626,8 @@
       else setMain("Under review. Submit your application for approval.", "warn");
     }
 
-    // ---------- METRICS (NEW) ----------
+    // ---------- METRICS ----------
     async function loadMetrics(userId){
-      // view: public.v_user_metrics
       try{
         const { data, error } = await supabase
           .from("v_user_metrics")
@@ -644,9 +647,8 @@
       }
     }
 
-    // ---------- APPLICATION (NEW) ----------
+    // ---------- APPLICATION ----------
     async function ensureApplication(user){
-      // One application per user_id (unique)
       try{
         const { data, error } = await supabase
           .from("applications")
@@ -655,10 +657,8 @@
           .maybeSingle();
 
         if (error) throw error;
-
         if (data) return data;
 
-        // create draft
         const { data: ins, error: insErr } = await supabase
           .from("applications")
           .insert([{
@@ -672,7 +672,6 @@
         if (insErr) throw insErr;
         return ins;
       }catch(e){
-        // table missing / RLS misconfigured
         return null;
       }
     }
@@ -724,7 +723,7 @@
       }
     }
 
-    // ---------- TRANSACTIONS (NEW) ----------
+    // ---------- TRANSACTIONS ----------
     function explorerLink(asset, tx){
       if (!tx) return null;
       if (asset === "BTC") return "https://www.blockchain.com/explorer/transactions/btc/" + encodeURIComponent(tx);
@@ -772,7 +771,6 @@
       }
     }
 
-    // Submit TX => creates a pending deposit in public.transactions
     $("btnSubmitTx").addEventListener("click", async () => {
       const asset = $("asset").value;
       const amountRaw = $("amount").value.trim();
@@ -823,7 +821,7 @@
       await loadMetrics(user.id);
     });
 
-    // ---------- MFA (TOTP) (kept) ----------
+    // ---------- MFA ----------
     async function loadMfa(){
       $("mfaEnroll").classList.add("hidden");
       $("mfaEnabled").classList.add("hidden");
@@ -908,7 +906,7 @@
       }
     });
 
-    // ---------- ADMIN (FIXED: use RPC approve_investor) ----------
+    // ---------- ADMIN (Investor approval via RPC approve_investor) ----------
     async function requireAdmin(){
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not signed in");
@@ -955,6 +953,19 @@
       }
     });
 
+    // Admin: Approve/Reject per transaction
+    async function adminConfirmTx(txId){
+      await requireAdmin();
+      const { error } = await supabase.rpc("admin_confirm_transaction", { tx_id: txId });
+      if (error) throw error;
+    }
+
+    async function adminRejectTx(txId){
+      await requireAdmin();
+      const { error } = await supabase.rpc("admin_reject_transaction", { tx_id: txId });
+      if (error) throw error;
+    }
+
     $("btnLoadAdminTx")?.addEventListener("click", async () => {
       adminSet("Loading…", "neutral");
       try{
@@ -965,12 +976,15 @@
         body.innerHTML = "";
 
         if (!data || data.length === 0){
-          body.innerHTML = `<tr><td colspan="5" class="muted">No transactions yet.</td></tr>`;
+          body.innerHTML = `<tr><td colspan="6" class="muted">No transactions yet.</td></tr>`;
           adminSet("No transactions found.", "warn");
           return;
         }
 
         for (const row of data){
+          const canAct = (row.status === "pending");
+          const id = Number(row.id);
+
           const tr = document.createElement("tr");
           tr.innerHTML = `
             <td>${row.email ?? "—"}</td>
@@ -978,9 +992,38 @@
             <td>${row.asset ?? "—"}</td>
             <td>${row.amount ?? "—"}</td>
             <td>${row.status ?? "—"}</td>
+            <td>
+              <button class="secondary" ${canAct ? "" : "disabled"} data-approve="${id}">Approve</button>
+              <button class="ghost" ${canAct ? "" : "disabled"} data-reject="${id}">Reject</button>
+            </td>
           `;
           body.appendChild(tr);
         }
+
+        // Delegate click handler (overwrites each time, avoids duplicates)
+        body.onclick = async (e) => {
+          const t = e.target;
+          const approveId = t?.getAttribute?.("data-approve");
+          const rejectId = t?.getAttribute?.("data-reject");
+
+          if (!approveId && !rejectId) return;
+
+          try{
+            if (approveId){
+              adminSet("Approving transaction…", "neutral");
+              await adminConfirmTx(Number(approveId));
+              adminSet("Approved ✅", "ok");
+            }
+            if (rejectId){
+              adminSet("Rejecting transaction…", "neutral");
+              await adminRejectTx(Number(rejectId));
+              adminSet("Rejected ✅", "warn");
+            }
+            $("btnLoadAdminTx").click();
+          }catch(err){
+            adminSet(`Action failed: ${err?.message ?? "error"}`, "bad");
+          }
+        };
 
         adminSet("Loaded ✅", "ok");
       }catch(e){
@@ -1010,11 +1053,9 @@
       const isAdmin = user.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
       $("adminPanel").classList.toggle("hidden", !isAdmin);
 
-      // approval
       const prof = await getApproval(user.email);
       applyApprovalUI(prof.status);
 
-      // application
       const app = await ensureApplication(user);
       if (app){
         fillApplicationForm(app);
@@ -1024,14 +1065,9 @@
         appSet("Application unavailable (run SQL setup / check RLS).", "bad");
       }
 
-      // crypto
       await loadCrypto();
-
-      // metrics + tx history
       await loadMetrics(user.id);
       await loadMyTransactions(user.id);
-
-      // mfa
       await loadMfa();
     }
 
